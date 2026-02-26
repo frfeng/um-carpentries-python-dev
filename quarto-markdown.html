@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Fred Feng">
+<meta name="dcterms.date" content="2026-03-01">
+
+<title>Writing Reports with Quarto Markdown</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-42ed7287b56c5c583e2c2463c9cf4916.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./quarto-markdown.html">Writing reports with Quarto markdown</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./python-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python basics</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python for plotting</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python for data analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto-markdown.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Writing reports with Quarto markdown</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#life-expectancy-and-gdp" id="toc-life-expectancy-and-gdp" class="nav-link" data-scroll-target="#life-expectancy-and-gdp">Life expectancy and GDP</a>
+  <ul class="collapse">
+  <li><a href="#figure" id="toc-figure" class="nav-link" data-scroll-target="#figure">Figure</a></li>
+  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+  </ul></li>
+  <li><a href="#some-other-analysis" id="toc-some-other-analysis" class="nav-link" data-scroll-target="#some-other-analysis">Some other analysis</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Writing Reports with Quarto Markdown</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Fred Feng </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This report was prepared to the attention of the United Nations. It analyzes the relationship between a country’s GDP, its life expectancy and CO2 emissions. Our goal is to determine to what degree a country’s economic strength or weakness may be related to its public health status and impact on climate pollution. We hypothesize that both life expectancy and CO2 emissions increase with a country’s GDP.</p>
+</section>
+<section id="life-expectancy-and-gdp" class="level2">
+<h2 class="anchored" data-anchor-id="life-expectancy-and-gdp">Life expectancy and GDP</h2>
+<section id="figure" class="level3">
+<h3 class="anchored" data-anchor-id="figure">Figure</h3>
+<div id="cell-fig-gapminder" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>alt.Chart(gapminder_1997).mark_circle().encode(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'gdpPercap'</span>).title(<span class="st">'GDP Per Capita'</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'lifeExp'</span>).title(<span class="st">'Life Expectancy'</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(<span class="st">'continent'</span>).scale(scheme<span class="op">=</span><span class="st">'set1'</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>alt.Size(<span class="st">'pop'</span>).title(<span class="st">'Population (in millions)'</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    shape<span class="op">=</span><span class="st">'continent'</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'country'</span>, </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>             alt.Tooltip(<span class="st">'pop'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>             .title(<span class="st">'Population in million'</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>             .<span class="bu">format</span>(<span class="st">',.1f'</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>             ],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>).transform_calculate(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    pop<span class="op">=</span><span class="st">'datum.pop/1000000'</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Do people in wealthy countries live longer?'</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="st">'container'</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>).interactive()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-gapminder" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gapminder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+
+<style>
+  #altair-viz-6f018913fcd34bb48911c05115648ae0.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-6f018913fcd34bb48911c05115648ae0.vega-embed details,
+  #altair-viz-6f018913fcd34bb48911c05115648ae0.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-6f018913fcd34bb48911c05115648ae0"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-6f018913fcd34bb48911c05115648ae0") {
+      outputDiv = document.getElementById("altair-viz-6f018913fcd34bb48911c05115648ae0");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-86c7d3f994999d48e1df64fba25df47d"}, "mark": {"type": "circle"}, "encoding": {"color": {"field": "continent", "scale": {"scheme": "set1"}, "type": "nominal"}, "shape": {"field": "continent", "type": "nominal"}, "size": {"field": "pop", "title": "Population (in millions)", "type": "quantitative"}, "tooltip": [{"field": "country", "type": "nominal"}, {"field": "pop", "format": ",.1f", "title": "Population in million", "type": "quantitative"}], "x": {"field": "gdpPercap", "title": "GDP Per Capita", "type": "quantitative"}, "y": {"field": "lifeExp", "title": "Life Expectancy", "type": "quantitative"}}, "params": [{"name": "param_1e9efca18e7a2868", "select": {"type": "interval", "encodings": ["x", "y"]}, "bind": "scales"}], "title": "Do people in wealthy countries live longer?", "transform": [{"calculate": "datum.pop/1000000", "as": "pop"}], "width": "container", "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-86c7d3f994999d48e1df64fba25df47d": [{"country": "Afghanistan", "pop": 22227415, "continent": "Asia", "lifeExp": 41.763, "gdpPercap": 635.341351}, {"country": "Albania", "pop": 3428038, "continent": "Europe", "lifeExp": 72.95, "gdpPercap": 3193.054604}, {"country": "Algeria", "pop": 29072015, "continent": "Africa", "lifeExp": 69.152, "gdpPercap": 4797.295051}, {"country": "Angola", "pop": 9875024, "continent": "Africa", "lifeExp": 40.963, "gdpPercap": 2277.140884}, {"country": "Argentina", "pop": 36203463, "continent": "Americas", "lifeExp": 73.275, "gdpPercap": 10967.28195}, {"country": "Australia", "pop": 18565243, "continent": "Oceania", "lifeExp": 78.83, "gdpPercap": 26997.93657}, {"country": "Austria", "pop": 8069876, "continent": "Europe", "lifeExp": 77.51, "gdpPercap": 29095.92066}, {"country": "Bahrain", "pop": 598561, "continent": "Asia", "lifeExp": 73.925, "gdpPercap": 20292.01679}, {"country": "Bangladesh", "pop": 123315288, "continent": "Asia", "lifeExp": 59.412, "gdpPercap": 972.7700352}, {"country": "Belgium", "pop": 10199787, "continent": "Europe", "lifeExp": 77.53, "gdpPercap": 27561.19663}, {"country": "Benin", "pop": 6066080, "continent": "Africa", "lifeExp": 54.777, "gdpPercap": 1232.975292}, {"country": "Bolivia", "pop": 7693188, "continent": "Americas", "lifeExp": 62.05, "gdpPercap": 3326.143191}, {"country": "Bosnia and Herzegovina", "pop": 3607000, "continent": "Europe", "lifeExp": 73.244, "gdpPercap": 4766.355904}, {"country": "Botswana", "pop": 1536536, "continent": "Africa", "lifeExp": 52.556, "gdpPercap": 8647.142313}, {"country": "Brazil", "pop": 168546719, "continent": "Americas", "lifeExp": 69.388, "gdpPercap": 7957.980824}, {"country": "Bulgaria", "pop": 8066057, "continent": "Europe", "lifeExp": 70.32, "gdpPercap": 5970.38876}, {"country": "Burkina Faso", "pop": 10352843, "continent": "Africa", "lifeExp": 50.324, "gdpPercap": 946.2949618}, {"country": "Burundi", "pop": 6121610, "continent": "Africa", "lifeExp": 45.326, "gdpPercap": 463.1151478}, {"country": "Cambodia", "pop": 11782962, "continent": "Asia", "lifeExp": 56.534, "gdpPercap": 734.28517}, {"country": "Cameroon", "pop": 14195809, "continent": "Africa", "lifeExp": 52.199, "gdpPercap": 1694.337469}, {"country": "Canada", "pop": 30305843, "continent": "Americas", "lifeExp": 78.61, "gdpPercap": 28954.92589}, {"country": "Central African Republic", "pop": 3696513, "continent": "Africa", "lifeExp": 46.066, "gdpPercap": 740.5063317}, {"country": "Chad", "pop": 7562011, "continent": "Africa", "lifeExp": 51.573, "gdpPercap": 1004.961353}, {"country": "Chile", "pop": 14599929, "continent": "Americas", "lifeExp": 75.816, "gdpPercap": 10118.05318}, {"country": "China", "pop": 1230075000, "continent": "Asia", "lifeExp": 70.426, "gdpPercap": 2289.234136}, {"country": "Colombia", "pop": 37657830, "continent": "Americas", "lifeExp": 70.313, "gdpPercap": 6117.361746}, {"country": "Comoros", "pop": 527982, "continent": "Africa", "lifeExp": 60.66, "gdpPercap": 1173.618235}, {"country": "Congo Dem. Rep.", "pop": 47798986, "continent": "Africa", "lifeExp": 42.587, "gdpPercap": 312.188423}, {"country": "Congo Rep.", "pop": 2800947, "continent": "Africa", "lifeExp": 52.962, "gdpPercap": 3484.164376}, {"country": "Costa Rica", "pop": 3518107, "continent": "Americas", "lifeExp": 77.26, "gdpPercap": 6677.045314}, {"country": "Cote d'Ivoire", "pop": 14625967, "continent": "Africa", "lifeExp": 47.991, "gdpPercap": 1786.265407}, {"country": "Croatia", "pop": 4444595, "continent": "Europe", "lifeExp": 73.68, "gdpPercap": 9875.604515}, {"country": "Cuba", "pop": 10983007, "continent": "Americas", "lifeExp": 76.151, "gdpPercap": 5431.990415}, {"country": "Czech Republic", "pop": 10300707, "continent": "Europe", "lifeExp": 74.01, "gdpPercap": 16048.51424}, {"country": "Denmark", "pop": 5283663, "continent": "Europe", "lifeExp": 76.11, "gdpPercap": 29804.34567}, {"country": "Djibouti", "pop": 417908, "continent": "Africa", "lifeExp": 53.157, "gdpPercap": 1895.016984}, {"country": "Dominican Republic", "pop": 7992357, "continent": "Americas", "lifeExp": 69.957, "gdpPercap": 3614.101285}, {"country": "Ecuador", "pop": 11911819, "continent": "Americas", "lifeExp": 72.312, "gdpPercap": 7429.455877}, {"country": "Egypt", "pop": 66134291, "continent": "Africa", "lifeExp": 67.217, "gdpPercap": 4173.181797}, {"country": "El Salvador", "pop": 5783439, "continent": "Americas", "lifeExp": 69.535, "gdpPercap": 5154.825496}, {"country": "Equatorial Guinea", "pop": 439971, "continent": "Africa", "lifeExp": 48.245, "gdpPercap": 2814.480755}, {"country": "Eritrea", "pop": 4058319, "continent": "Africa", "lifeExp": 53.378, "gdpPercap": 913.47079}, {"country": "Ethiopia", "pop": 59861301, "continent": "Africa", "lifeExp": 49.402, "gdpPercap": 515.8894013}, {"country": "Finland", "pop": 5134406, "continent": "Europe", "lifeExp": 77.13, "gdpPercap": 23723.9502}, {"country": "France", "pop": 58623428, "continent": "Europe", "lifeExp": 78.64, "gdpPercap": 25889.78487}, {"country": "Gabon", "pop": 1126189, "continent": "Africa", "lifeExp": 60.461, "gdpPercap": 14722.84188}, {"country": "Gambia", "pop": 1235767, "continent": "Africa", "lifeExp": 55.861, "gdpPercap": 653.7301704}, {"country": "Germany", "pop": 82011073, "continent": "Europe", "lifeExp": 77.34, "gdpPercap": 27788.88416}, {"country": "Ghana", "pop": 18418288, "continent": "Africa", "lifeExp": 58.556, "gdpPercap": 1005.245812}, {"country": "Greece", "pop": 10502372, "continent": "Europe", "lifeExp": 77.869, "gdpPercap": 18747.69814}, {"country": "Guatemala", "pop": 9803875, "continent": "Americas", "lifeExp": 66.322, "gdpPercap": 4684.313807}, {"country": "Guinea", "pop": 8048834, "continent": "Africa", "lifeExp": 51.455, "gdpPercap": 869.4497668}, {"country": "Guinea-Bissau", "pop": 1193708, "continent": "Africa", "lifeExp": 44.873, "gdpPercap": 796.6644681}, {"country": "Haiti", "pop": 6913545, "continent": "Americas", "lifeExp": 56.671, "gdpPercap": 1341.726931}, {"country": "Honduras", "pop": 5867957, "continent": "Americas", "lifeExp": 67.659, "gdpPercap": 3160.454906}, {"country": "Hong Kong China", "pop": 6495918, "continent": "Asia", "lifeExp": 80.0, "gdpPercap": 28377.63219}, {"country": "Hungary", "pop": 10244684, "continent": "Europe", "lifeExp": 71.04, "gdpPercap": 11712.7768}, {"country": "Iceland", "pop": 271192, "continent": "Europe", "lifeExp": 78.95, "gdpPercap": 28061.09966}, {"country": "India", "pop": 959000000, "continent": "Asia", "lifeExp": 61.765, "gdpPercap": 1458.817442}, {"country": "Indonesia", "pop": 199278000, "continent": "Asia", "lifeExp": 66.041, "gdpPercap": 3119.335603}, {"country": "Iran", "pop": 63327987, "continent": "Asia", "lifeExp": 68.042, "gdpPercap": 8263.590301}, {"country": "Iraq", "pop": 20775703, "continent": "Asia", "lifeExp": 58.811, "gdpPercap": 3076.239795}, {"country": "Ireland", "pop": 3667233, "continent": "Europe", "lifeExp": 76.122, "gdpPercap": 24521.94713}, {"country": "Israel", "pop": 5531387, "continent": "Asia", "lifeExp": 78.269, "gdpPercap": 20896.60924}, {"country": "Italy", "pop": 57479469, "continent": "Europe", "lifeExp": 78.82, "gdpPercap": 24675.02446}, {"country": "Jamaica", "pop": 2531311, "continent": "Americas", "lifeExp": 72.262, "gdpPercap": 7121.924704}, {"country": "Japan", "pop": 125956499, "continent": "Asia", "lifeExp": 80.69, "gdpPercap": 28816.58499}, {"country": "Jordan", "pop": 4526235, "continent": "Asia", "lifeExp": 69.772, "gdpPercap": 3645.379572}, {"country": "Kenya", "pop": 28263827, "continent": "Africa", "lifeExp": 54.407, "gdpPercap": 1360.485021}, {"country": "Korea Dem. Rep.", "pop": 21585105, "continent": "Asia", "lifeExp": 67.727, "gdpPercap": 1690.756814}, {"country": "Korea Rep.", "pop": 46173816, "continent": "Asia", "lifeExp": 74.647, "gdpPercap": 15993.52796}, {"country": "Kuwait", "pop": 1765345, "continent": "Asia", "lifeExp": 76.156, "gdpPercap": 40300.61996}, {"country": "Lebanon", "pop": 3430388, "continent": "Asia", "lifeExp": 70.265, "gdpPercap": 8754.96385}, {"country": "Lesotho", "pop": 1982823, "continent": "Africa", "lifeExp": 55.558, "gdpPercap": 1186.147994}, {"country": "Liberia", "pop": 2200725, "continent": "Africa", "lifeExp": 42.221, "gdpPercap": 609.1739508}, {"country": "Libya", "pop": 4759670, "continent": "Africa", "lifeExp": 71.555, "gdpPercap": 9467.446056}, {"country": "Madagascar", "pop": 14165114, "continent": "Africa", "lifeExp": 54.978, "gdpPercap": 986.2958956}, {"country": "Malawi", "pop": 10419991, "continent": "Africa", "lifeExp": 47.495, "gdpPercap": 692.2758103}, {"country": "Malaysia", "pop": 20476091, "continent": "Asia", "lifeExp": 71.938, "gdpPercap": 10132.90964}, {"country": "Mali", "pop": 9384984, "continent": "Africa", "lifeExp": 49.903, "gdpPercap": 790.2579846}, {"country": "Mauritania", "pop": 2444741, "continent": "Africa", "lifeExp": 60.43, "gdpPercap": 1483.136136}, {"country": "Mauritius", "pop": 1149818, "continent": "Africa", "lifeExp": 70.736, "gdpPercap": 7425.705295}, {"country": "Mexico", "pop": 95895146, "continent": "Americas", "lifeExp": 73.67, "gdpPercap": 9767.29753}, {"country": "Mongolia", "pop": 2494803, "continent": "Asia", "lifeExp": 63.625, "gdpPercap": 1902.2521}, {"country": "Montenegro", "pop": 692651, "continent": "Europe", "lifeExp": 75.445, "gdpPercap": 6465.613349}, {"country": "Morocco", "pop": 28529501, "continent": "Africa", "lifeExp": 67.66, "gdpPercap": 2982.101858}, {"country": "Mozambique", "pop": 16603334, "continent": "Africa", "lifeExp": 46.344, "gdpPercap": 472.3460771}, {"country": "Myanmar", "pop": 43247867, "continent": "Asia", "lifeExp": 60.328, "gdpPercap": 415.0}, {"country": "Namibia", "pop": 1774766, "continent": "Africa", "lifeExp": 58.909, "gdpPercap": 3899.52426}, {"country": "Nepal", "pop": 23001113, "continent": "Asia", "lifeExp": 59.426, "gdpPercap": 1010.892138}, {"country": "Netherlands", "pop": 15604464, "continent": "Europe", "lifeExp": 78.03, "gdpPercap": 30246.13063}, {"country": "New Zealand", "pop": 3676187, "continent": "Oceania", "lifeExp": 77.55, "gdpPercap": 21050.41377}, {"country": "Nicaragua", "pop": 4609572, "continent": "Americas", "lifeExp": 68.426, "gdpPercap": 2253.023004}, {"country": "Niger", "pop": 9666252, "continent": "Africa", "lifeExp": 51.313, "gdpPercap": 580.3052092}, {"country": "Nigeria", "pop": 106207839, "continent": "Africa", "lifeExp": 47.464, "gdpPercap": 1624.941275}, {"country": "Norway", "pop": 4405672, "continent": "Europe", "lifeExp": 78.32, "gdpPercap": 41283.16433}, {"country": "Oman", "pop": 2283635, "continent": "Asia", "lifeExp": 72.499, "gdpPercap": 19702.05581}, {"country": "Pakistan", "pop": 135564834, "continent": "Asia", "lifeExp": 61.818, "gdpPercap": 2049.350521}, {"country": "Panama", "pop": 2734531, "continent": "Americas", "lifeExp": 73.738, "gdpPercap": 7113.692252}, {"country": "Paraguay", "pop": 5154123, "continent": "Americas", "lifeExp": 69.4, "gdpPercap": 4247.400261}, {"country": "Peru", "pop": 24748122, "continent": "Americas", "lifeExp": 68.386, "gdpPercap": 5838.347657}, {"country": "Philippines", "pop": 75012988, "continent": "Asia", "lifeExp": 68.564, "gdpPercap": 2536.534925}, {"country": "Poland", "pop": 38654957, "continent": "Europe", "lifeExp": 72.75, "gdpPercap": 10159.58368}, {"country": "Portugal", "pop": 10156415, "continent": "Europe", "lifeExp": 75.97, "gdpPercap": 17641.03156}, {"country": "Puerto Rico", "pop": 3759430, "continent": "Americas", "lifeExp": 74.917, "gdpPercap": 16999.4333}, {"country": "Reunion", "pop": 684810, "continent": "Africa", "lifeExp": 74.772, "gdpPercap": 6071.941411}, {"country": "Romania", "pop": 22562458, "continent": "Europe", "lifeExp": 69.72, "gdpPercap": 7346.547557}, {"country": "Rwanda", "pop": 7212583, "continent": "Africa", "lifeExp": 36.087, "gdpPercap": 589.9445051}, {"country": "Sao Tome and Principe", "pop": 145608, "continent": "Africa", "lifeExp": 63.306, "gdpPercap": 1339.076036}, {"country": "Saudi Arabia", "pop": 21229759, "continent": "Asia", "lifeExp": 70.533, "gdpPercap": 20586.69019}, {"country": "Senegal", "pop": 9535314, "continent": "Africa", "lifeExp": 60.187, "gdpPercap": 1392.368347}, {"country": "Serbia", "pop": 10336594, "continent": "Europe", "lifeExp": 72.232, "gdpPercap": 7914.320304}, {"country": "Sierra Leone", "pop": 4578212, "continent": "Africa", "lifeExp": 39.897, "gdpPercap": 574.6481576}, {"country": "Singapore", "pop": 3802309, "continent": "Asia", "lifeExp": 77.158, "gdpPercap": 33519.4766}, {"country": "Slovak Republic", "pop": 5383010, "continent": "Europe", "lifeExp": 72.71, "gdpPercap": 12126.23065}, {"country": "Slovenia", "pop": 2011612, "continent": "Europe", "lifeExp": 75.13, "gdpPercap": 17161.10735}, {"country": "Somalia", "pop": 6633514, "continent": "Africa", "lifeExp": 43.795, "gdpPercap": 930.5964284}, {"country": "South Africa", "pop": 42835005, "continent": "Africa", "lifeExp": 60.236, "gdpPercap": 7479.188244}, {"country": "Spain", "pop": 39855442, "continent": "Europe", "lifeExp": 78.77, "gdpPercap": 20445.29896}, {"country": "Sri Lanka", "pop": 18698655, "continent": "Asia", "lifeExp": 70.457, "gdpPercap": 2664.477257}, {"country": "Sudan", "pop": 32160729, "continent": "Africa", "lifeExp": 55.373, "gdpPercap": 1632.210764}, {"country": "Swaziland", "pop": 1054486, "continent": "Africa", "lifeExp": 54.289, "gdpPercap": 3876.76846}, {"country": "Sweden", "pop": 8897619, "continent": "Europe", "lifeExp": 79.39, "gdpPercap": 25266.59499}, {"country": "Switzerland", "pop": 7193761, "continent": "Europe", "lifeExp": 79.37, "gdpPercap": 32135.32301}, {"country": "Syria", "pop": 15081016, "continent": "Asia", "lifeExp": 71.527, "gdpPercap": 4014.238972}, {"country": "Taiwan", "pop": 21628605, "continent": "Asia", "lifeExp": 75.25, "gdpPercap": 20206.82098}, {"country": "Tanzania", "pop": 30686889, "continent": "Africa", "lifeExp": 48.466, "gdpPercap": 789.1862231}, {"country": "Thailand", "pop": 60216677, "continent": "Asia", "lifeExp": 67.521, "gdpPercap": 5852.625497}, {"country": "Togo", "pop": 4320890, "continent": "Africa", "lifeExp": 58.39, "gdpPercap": 982.2869243}, {"country": "Trinidad and Tobago", "pop": 1138101, "continent": "Americas", "lifeExp": 69.465, "gdpPercap": 8792.573126}, {"country": "Tunisia", "pop": 9231669, "continent": "Africa", "lifeExp": 71.973, "gdpPercap": 4876.798614}, {"country": "Turkey", "pop": 63047647, "continent": "Europe", "lifeExp": 68.835, "gdpPercap": 6601.429915}, {"country": "Uganda", "pop": 21210254, "continent": "Africa", "lifeExp": 44.578, "gdpPercap": 816.559081}, {"country": "United Kingdom", "pop": 58808266, "continent": "Europe", "lifeExp": 77.218, "gdpPercap": 26074.53136}, {"country": "United States", "pop": 272911760, "continent": "Americas", "lifeExp": 76.81, "gdpPercap": 35767.43303}, {"country": "Uruguay", "pop": 3262838, "continent": "Americas", "lifeExp": 74.223, "gdpPercap": 9230.240708}, {"country": "Venezuela", "pop": 22374398, "continent": "Americas", "lifeExp": 72.146, "gdpPercap": 10165.49518}, {"country": "Vietnam", "pop": 76048996, "continent": "Asia", "lifeExp": 70.672, "gdpPercap": 1385.896769}, {"country": "West Bank and Gaza", "pop": 2826046, "continent": "Asia", "lifeExp": 71.096, "gdpPercap": 7110.667619}, {"country": "Yemen Rep.", "pop": 15826497, "continent": "Asia", "lifeExp": 58.02, "gdpPercap": 2117.484526}, {"country": "Zambia", "pop": 9417789, "continent": "Africa", "lifeExp": 40.238, "gdpPercap": 1071.353818}, {"country": "Zimbabwe", "pop": 11404948, "continent": "Africa", "lifeExp": 46.809, "gdpPercap": 792.4499603}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gapminder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Life Expectancy and GDP
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
+<p><a href="#fig-gapminder" class="quarto-xref">Figure&nbsp;1</a> shows the relationship between GDP per capita and life expectancy for a total of 142 countries. For this set of countries, economic wealth ranged from a minimum of USD $312 to a maximum of USD $41,283 per capita.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Summary of Data</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Number of Countries</td>
+<td>142</td>
+</tr>
+<tr class="even">
+<td>Minimum GDP per capita</td>
+<td>$312</td>
+</tr>
+<tr class="odd">
+<td>Maximum GDP per capita</td>
+<td>$41,283</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="some-other-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="some-other-analysis">Some other analysis</h2>
+<div id="6ac35c52" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<style type="text/css">
+</style>
+
+<table id="T_e1c11" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_e1c11_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">country</th>
+<th id="T_e1c11_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">pop</th>
+<th id="T_e1c11_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">continent</th>
+<th id="T_e1c11_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">lifeExp</th>
+<th id="T_e1c11_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">gdpPercap</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_e1c11_row0_col0" class="data row0 col0">Australia</td>
+<td id="T_e1c11_row0_col1" class="data row0 col1">18565243</td>
+<td id="T_e1c11_row0_col2" class="data row0 col2">Oceania</td>
+<td id="T_e1c11_row0_col3" class="data row0 col3">78.830000</td>
+<td id="T_e1c11_row0_col4" class="data row0 col4">26997.936570</td>
+</tr>
+<tr class="even">
+<td id="T_e1c11_row1_col0" class="data row1 col0">New Zealand</td>
+<td id="T_e1c11_row1_col1" class="data row1 col1">3676187</td>
+<td id="T_e1c11_row1_col2" class="data row1 col2">Oceania</td>
+<td id="T_e1c11_row1_col3" class="data row1 col3">77.550000</td>
+<td id="T_e1c11_row1_col4" class="data row1 col4">21050.413770</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="3db646de" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="5">
+
+<style>
+  #altair-viz-6ac8e829675d4d36b2410a12ab0eff4a.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-6ac8e829675d4d36b2410a12ab0eff4a.vega-embed details,
+  #altair-viz-6ac8e829675d4d36b2410a12ab0eff4a.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-6ac8e829675d4d36b2410a12ab0eff4a"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-6ac8e829675d4d36b2410a12ab0eff4a") {
+      outputDiv = document.getElementById("altair-viz-6ac8e829675d4d36b2410a12ab0eff4a");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"mark": {"type": "geoshape", "color": "lightgray", "stroke": "gray"}}, {"mark": {"type": "geoshape"}, "encoding": {"color": {"field": "lifeExp", "type": "quantitative"}, "tooltip": [{"field": "country", "type": "nominal"}, {"field": "lifeExp", "type": "quantitative"}]}, "transform": [{"lookup": "id", "from": {"data": {"name": "data-8e3b7a7fb6b4f938351a3c8f2b15d9a5"}, "key": "country-code", "fields": ["lifeExp", "country"]}}]}], "data": {"url": "https://cdn.jsdelivr.net/npm/vega-datasets@v3.2.1/data/world-110m.json", "format": {"feature": "countries", "type": "topojson"}}, "projection": {"type": "equirectangular"}, "width": "container", "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-8e3b7a7fb6b4f938351a3c8f2b15d9a5": [{"country": "Afghanistan", "pop": 22227415, "continent": "Asia", "lifeExp": 41.763, "gdpPercap": 635.341351, "alpha-2": "AF", "alpha-3": "AFG", "country-code": 4, "region": "Asia", "sub-region": "Southern Asia"}, {"country": "Albania", "pop": 3428038, "continent": "Europe", "lifeExp": 72.95, "gdpPercap": 3193.054604, "alpha-2": "AL", "alpha-3": "ALB", "country-code": 8, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Algeria", "pop": 29072015, "continent": "Africa", "lifeExp": 69.152, "gdpPercap": 4797.295051, "alpha-2": "DZ", "alpha-3": "DZA", "country-code": 12, "region": "Africa", "sub-region": "Northern Africa"}, {"country": "Angola", "pop": 9875024, "continent": "Africa", "lifeExp": 40.963, "gdpPercap": 2277.140884, "alpha-2": "AO", "alpha-3": "AGO", "country-code": 24, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Argentina", "pop": 36203463, "continent": "Americas", "lifeExp": 73.275, "gdpPercap": 10967.28195, "alpha-2": "AR", "alpha-3": "ARG", "country-code": 32, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Australia", "pop": 18565243, "continent": "Oceania", "lifeExp": 78.83, "gdpPercap": 26997.93657, "alpha-2": "AU", "alpha-3": "AUS", "country-code": 36, "region": "Oceania", "sub-region": "Australia and New Zealand"}, {"country": "Austria", "pop": 8069876, "continent": "Europe", "lifeExp": 77.51, "gdpPercap": 29095.92066, "alpha-2": "AT", "alpha-3": "AUT", "country-code": 40, "region": "Europe", "sub-region": "Western Europe"}, {"country": "Bahrain", "pop": 598561, "continent": "Asia", "lifeExp": 73.925, "gdpPercap": 20292.01679, "alpha-2": "BH", "alpha-3": "BHR", "country-code": 48, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Bangladesh", "pop": 123315288, "continent": "Asia", "lifeExp": 59.412, "gdpPercap": 972.7700352, "alpha-2": "BD", "alpha-3": "BGD", "country-code": 50, "region": "Asia", "sub-region": "Southern Asia"}, {"country": "Belgium", "pop": 10199787, "continent": "Europe", "lifeExp": 77.53, "gdpPercap": 27561.19663, "alpha-2": "BE", "alpha-3": "BEL", "country-code": 56, "region": "Europe", "sub-region": "Western Europe"}, {"country": "Benin", "pop": 6066080, "continent": "Africa", "lifeExp": 54.777, "gdpPercap": 1232.975292, "alpha-2": "BJ", "alpha-3": "BEN", "country-code": 204, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Bosnia and Herzegovina", "pop": 3607000, "continent": "Europe", "lifeExp": 73.244, "gdpPercap": 4766.355904, "alpha-2": "BA", "alpha-3": "BIH", "country-code": 70, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Botswana", "pop": 1536536, "continent": "Africa", "lifeExp": 52.556, "gdpPercap": 8647.142313, "alpha-2": "BW", "alpha-3": "BWA", "country-code": 72, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Brazil", "pop": 168546719, "continent": "Americas", "lifeExp": 69.388, "gdpPercap": 7957.980824, "alpha-2": "BR", "alpha-3": "BRA", "country-code": 76, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Bulgaria", "pop": 8066057, "continent": "Europe", "lifeExp": 70.32, "gdpPercap": 5970.38876, "alpha-2": "BG", "alpha-3": "BGR", "country-code": 100, "region": "Europe", "sub-region": "Eastern Europe"}, {"country": "Burkina Faso", "pop": 10352843, "continent": "Africa", "lifeExp": 50.324, "gdpPercap": 946.2949618, "alpha-2": "BF", "alpha-3": "BFA", "country-code": 854, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Burundi", "pop": 6121610, "continent": "Africa", "lifeExp": 45.326, "gdpPercap": 463.1151478, "alpha-2": "BI", "alpha-3": "BDI", "country-code": 108, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Cambodia", "pop": 11782962, "continent": "Asia", "lifeExp": 56.534, "gdpPercap": 734.28517, "alpha-2": "KH", "alpha-3": "KHM", "country-code": 116, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Cameroon", "pop": 14195809, "continent": "Africa", "lifeExp": 52.199, "gdpPercap": 1694.337469, "alpha-2": "CM", "alpha-3": "CMR", "country-code": 120, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Canada", "pop": 30305843, "continent": "Americas", "lifeExp": 78.61, "gdpPercap": 28954.92589, "alpha-2": "CA", "alpha-3": "CAN", "country-code": 124, "region": "Americas", "sub-region": "Northern America"}, {"country": "Central African Republic", "pop": 3696513, "continent": "Africa", "lifeExp": 46.066, "gdpPercap": 740.5063317, "alpha-2": "CF", "alpha-3": "CAF", "country-code": 140, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Chad", "pop": 7562011, "continent": "Africa", "lifeExp": 51.573, "gdpPercap": 1004.961353, "alpha-2": "TD", "alpha-3": "TCD", "country-code": 148, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Chile", "pop": 14599929, "continent": "Americas", "lifeExp": 75.816, "gdpPercap": 10118.05318, "alpha-2": "CL", "alpha-3": "CHL", "country-code": 152, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "China", "pop": 1230075000, "continent": "Asia", "lifeExp": 70.426, "gdpPercap": 2289.234136, "alpha-2": "CN", "alpha-3": "CHN", "country-code": 156, "region": "Asia", "sub-region": "Eastern Asia"}, {"country": "Colombia", "pop": 37657830, "continent": "Americas", "lifeExp": 70.313, "gdpPercap": 6117.361746, "alpha-2": "CO", "alpha-3": "COL", "country-code": 170, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Comoros", "pop": 527982, "continent": "Africa", "lifeExp": 60.66, "gdpPercap": 1173.618235, "alpha-2": "KM", "alpha-3": "COM", "country-code": 174, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Costa Rica", "pop": 3518107, "continent": "Americas", "lifeExp": 77.26, "gdpPercap": 6677.045314, "alpha-2": "CR", "alpha-3": "CRI", "country-code": 188, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Croatia", "pop": 4444595, "continent": "Europe", "lifeExp": 73.68, "gdpPercap": 9875.604515, "alpha-2": "HR", "alpha-3": "HRV", "country-code": 191, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Cuba", "pop": 10983007, "continent": "Americas", "lifeExp": 76.151, "gdpPercap": 5431.990415, "alpha-2": "CU", "alpha-3": "CUB", "country-code": 192, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Denmark", "pop": 5283663, "continent": "Europe", "lifeExp": 76.11, "gdpPercap": 29804.34567, "alpha-2": "DK", "alpha-3": "DNK", "country-code": 208, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "Djibouti", "pop": 417908, "continent": "Africa", "lifeExp": 53.157, "gdpPercap": 1895.016984, "alpha-2": "DJ", "alpha-3": "DJI", "country-code": 262, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Dominican Republic", "pop": 7992357, "continent": "Americas", "lifeExp": 69.957, "gdpPercap": 3614.101285, "alpha-2": "DO", "alpha-3": "DOM", "country-code": 214, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Ecuador", "pop": 11911819, "continent": "Americas", "lifeExp": 72.312, "gdpPercap": 7429.455877, "alpha-2": "EC", "alpha-3": "ECU", "country-code": 218, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Egypt", "pop": 66134291, "continent": "Africa", "lifeExp": 67.217, "gdpPercap": 4173.181797, "alpha-2": "EG", "alpha-3": "EGY", "country-code": 818, "region": "Africa", "sub-region": "Northern Africa"}, {"country": "El Salvador", "pop": 5783439, "continent": "Americas", "lifeExp": 69.535, "gdpPercap": 5154.825496, "alpha-2": "SV", "alpha-3": "SLV", "country-code": 222, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Equatorial Guinea", "pop": 439971, "continent": "Africa", "lifeExp": 48.245, "gdpPercap": 2814.480755, "alpha-2": "GQ", "alpha-3": "GNQ", "country-code": 226, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Eritrea", "pop": 4058319, "continent": "Africa", "lifeExp": 53.378, "gdpPercap": 913.47079, "alpha-2": "ER", "alpha-3": "ERI", "country-code": 232, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Ethiopia", "pop": 59861301, "continent": "Africa", "lifeExp": 49.402, "gdpPercap": 515.8894013, "alpha-2": "ET", "alpha-3": "ETH", "country-code": 231, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Finland", "pop": 5134406, "continent": "Europe", "lifeExp": 77.13, "gdpPercap": 23723.9502, "alpha-2": "FI", "alpha-3": "FIN", "country-code": 246, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "France", "pop": 58623428, "continent": "Europe", "lifeExp": 78.64, "gdpPercap": 25889.78487, "alpha-2": "FR", "alpha-3": "FRA", "country-code": 250, "region": "Europe", "sub-region": "Western Europe"}, {"country": "Gabon", "pop": 1126189, "continent": "Africa", "lifeExp": 60.461, "gdpPercap": 14722.84188, "alpha-2": "GA", "alpha-3": "GAB", "country-code": 266, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Gambia", "pop": 1235767, "continent": "Africa", "lifeExp": 55.861, "gdpPercap": 653.7301704, "alpha-2": "GM", "alpha-3": "GMB", "country-code": 270, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Germany", "pop": 82011073, "continent": "Europe", "lifeExp": 77.34, "gdpPercap": 27788.88416, "alpha-2": "DE", "alpha-3": "DEU", "country-code": 276, "region": "Europe", "sub-region": "Western Europe"}, {"country": "Ghana", "pop": 18418288, "continent": "Africa", "lifeExp": 58.556, "gdpPercap": 1005.245812, "alpha-2": "GH", "alpha-3": "GHA", "country-code": 288, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Greece", "pop": 10502372, "continent": "Europe", "lifeExp": 77.869, "gdpPercap": 18747.69814, "alpha-2": "GR", "alpha-3": "GRC", "country-code": 300, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Guatemala", "pop": 9803875, "continent": "Americas", "lifeExp": 66.322, "gdpPercap": 4684.313807, "alpha-2": "GT", "alpha-3": "GTM", "country-code": 320, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Guinea", "pop": 8048834, "continent": "Africa", "lifeExp": 51.455, "gdpPercap": 869.4497668, "alpha-2": "GN", "alpha-3": "GIN", "country-code": 324, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Guinea-Bissau", "pop": 1193708, "continent": "Africa", "lifeExp": 44.873, "gdpPercap": 796.6644681, "alpha-2": "GW", "alpha-3": "GNB", "country-code": 624, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Haiti", "pop": 6913545, "continent": "Americas", "lifeExp": 56.671, "gdpPercap": 1341.726931, "alpha-2": "HT", "alpha-3": "HTI", "country-code": 332, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Honduras", "pop": 5867957, "continent": "Americas", "lifeExp": 67.659, "gdpPercap": 3160.454906, "alpha-2": "HN", "alpha-3": "HND", "country-code": 340, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Hungary", "pop": 10244684, "continent": "Europe", "lifeExp": 71.04, "gdpPercap": 11712.7768, "alpha-2": "HU", "alpha-3": "HUN", "country-code": 348, "region": "Europe", "sub-region": "Eastern Europe"}, {"country": "Iceland", "pop": 271192, "continent": "Europe", "lifeExp": 78.95, "gdpPercap": 28061.09966, "alpha-2": "IS", "alpha-3": "ISL", "country-code": 352, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "India", "pop": 959000000, "continent": "Asia", "lifeExp": 61.765, "gdpPercap": 1458.817442, "alpha-2": "IN", "alpha-3": "IND", "country-code": 356, "region": "Asia", "sub-region": "Southern Asia"}, {"country": "Indonesia", "pop": 199278000, "continent": "Asia", "lifeExp": 66.041, "gdpPercap": 3119.335603, "alpha-2": "ID", "alpha-3": "IDN", "country-code": 360, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Iraq", "pop": 20775703, "continent": "Asia", "lifeExp": 58.811, "gdpPercap": 3076.239795, "alpha-2": "IQ", "alpha-3": "IRQ", "country-code": 368, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Ireland", "pop": 3667233, "continent": "Europe", "lifeExp": 76.122, "gdpPercap": 24521.94713, "alpha-2": "IE", "alpha-3": "IRL", "country-code": 372, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "Israel", "pop": 5531387, "continent": "Asia", "lifeExp": 78.269, "gdpPercap": 20896.60924, "alpha-2": "IL", "alpha-3": "ISR", "country-code": 376, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Italy", "pop": 57479469, "continent": "Europe", "lifeExp": 78.82, "gdpPercap": 24675.02446, "alpha-2": "IT", "alpha-3": "ITA", "country-code": 380, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Jamaica", "pop": 2531311, "continent": "Americas", "lifeExp": 72.262, "gdpPercap": 7121.924704, "alpha-2": "JM", "alpha-3": "JAM", "country-code": 388, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Japan", "pop": 125956499, "continent": "Asia", "lifeExp": 80.69, "gdpPercap": 28816.58499, "alpha-2": "JP", "alpha-3": "JPN", "country-code": 392, "region": "Asia", "sub-region": "Eastern Asia"}, {"country": "Jordan", "pop": 4526235, "continent": "Asia", "lifeExp": 69.772, "gdpPercap": 3645.379572, "alpha-2": "JO", "alpha-3": "JOR", "country-code": 400, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Kenya", "pop": 28263827, "continent": "Africa", "lifeExp": 54.407, "gdpPercap": 1360.485021, "alpha-2": "KE", "alpha-3": "KEN", "country-code": 404, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Kuwait", "pop": 1765345, "continent": "Asia", "lifeExp": 76.156, "gdpPercap": 40300.61996, "alpha-2": "KW", "alpha-3": "KWT", "country-code": 414, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Lebanon", "pop": 3430388, "continent": "Asia", "lifeExp": 70.265, "gdpPercap": 8754.96385, "alpha-2": "LB", "alpha-3": "LBN", "country-code": 422, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Lesotho", "pop": 1982823, "continent": "Africa", "lifeExp": 55.558, "gdpPercap": 1186.147994, "alpha-2": "LS", "alpha-3": "LSO", "country-code": 426, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Liberia", "pop": 2200725, "continent": "Africa", "lifeExp": 42.221, "gdpPercap": 609.1739508, "alpha-2": "LR", "alpha-3": "LBR", "country-code": 430, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Libya", "pop": 4759670, "continent": "Africa", "lifeExp": 71.555, "gdpPercap": 9467.446056, "alpha-2": "LY", "alpha-3": "LBY", "country-code": 434, "region": "Africa", "sub-region": "Northern Africa"}, {"country": "Madagascar", "pop": 14165114, "continent": "Africa", "lifeExp": 54.978, "gdpPercap": 986.2958956, "alpha-2": "MG", "alpha-3": "MDG", "country-code": 450, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Malawi", "pop": 10419991, "continent": "Africa", "lifeExp": 47.495, "gdpPercap": 692.2758103, "alpha-2": "MW", "alpha-3": "MWI", "country-code": 454, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Malaysia", "pop": 20476091, "continent": "Asia", "lifeExp": 71.938, "gdpPercap": 10132.90964, "alpha-2": "MY", "alpha-3": "MYS", "country-code": 458, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Mali", "pop": 9384984, "continent": "Africa", "lifeExp": 49.903, "gdpPercap": 790.2579846, "alpha-2": "ML", "alpha-3": "MLI", "country-code": 466, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Mauritania", "pop": 2444741, "continent": "Africa", "lifeExp": 60.43, "gdpPercap": 1483.136136, "alpha-2": "MR", "alpha-3": "MRT", "country-code": 478, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Mauritius", "pop": 1149818, "continent": "Africa", "lifeExp": 70.736, "gdpPercap": 7425.705295, "alpha-2": "MU", "alpha-3": "MUS", "country-code": 480, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Mexico", "pop": 95895146, "continent": "Americas", "lifeExp": 73.67, "gdpPercap": 9767.29753, "alpha-2": "MX", "alpha-3": "MEX", "country-code": 484, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Mongolia", "pop": 2494803, "continent": "Asia", "lifeExp": 63.625, "gdpPercap": 1902.2521, "alpha-2": "MN", "alpha-3": "MNG", "country-code": 496, "region": "Asia", "sub-region": "Eastern Asia"}, {"country": "Montenegro", "pop": 692651, "continent": "Europe", "lifeExp": 75.445, "gdpPercap": 6465.613349, "alpha-2": "ME", "alpha-3": "MNE", "country-code": 499, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Morocco", "pop": 28529501, "continent": "Africa", "lifeExp": 67.66, "gdpPercap": 2982.101858, "alpha-2": "MA", "alpha-3": "MAR", "country-code": 504, "region": "Africa", "sub-region": "Northern Africa"}, {"country": "Mozambique", "pop": 16603334, "continent": "Africa", "lifeExp": 46.344, "gdpPercap": 472.3460771, "alpha-2": "MZ", "alpha-3": "MOZ", "country-code": 508, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Myanmar", "pop": 43247867, "continent": "Asia", "lifeExp": 60.328, "gdpPercap": 415.0, "alpha-2": "MM", "alpha-3": "MMR", "country-code": 104, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Namibia", "pop": 1774766, "continent": "Africa", "lifeExp": 58.909, "gdpPercap": 3899.52426, "alpha-2": NaN, "alpha-3": "NAM", "country-code": 516, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Nepal", "pop": 23001113, "continent": "Asia", "lifeExp": 59.426, "gdpPercap": 1010.892138, "alpha-2": "NP", "alpha-3": "NPL", "country-code": 524, "region": "Asia", "sub-region": "Southern Asia"}, {"country": "Netherlands", "pop": 15604464, "continent": "Europe", "lifeExp": 78.03, "gdpPercap": 30246.13063, "alpha-2": "NL", "alpha-3": "NLD", "country-code": 528, "region": "Europe", "sub-region": "Western Europe"}, {"country": "New Zealand", "pop": 3676187, "continent": "Oceania", "lifeExp": 77.55, "gdpPercap": 21050.41377, "alpha-2": "NZ", "alpha-3": "NZL", "country-code": 554, "region": "Oceania", "sub-region": "Australia and New Zealand"}, {"country": "Nicaragua", "pop": 4609572, "continent": "Americas", "lifeExp": 68.426, "gdpPercap": 2253.023004, "alpha-2": "NI", "alpha-3": "NIC", "country-code": 558, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Niger", "pop": 9666252, "continent": "Africa", "lifeExp": 51.313, "gdpPercap": 580.3052092, "alpha-2": "NE", "alpha-3": "NER", "country-code": 562, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Nigeria", "pop": 106207839, "continent": "Africa", "lifeExp": 47.464, "gdpPercap": 1624.941275, "alpha-2": "NG", "alpha-3": "NGA", "country-code": 566, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Norway", "pop": 4405672, "continent": "Europe", "lifeExp": 78.32, "gdpPercap": 41283.16433, "alpha-2": "NO", "alpha-3": "NOR", "country-code": 578, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "Oman", "pop": 2283635, "continent": "Asia", "lifeExp": 72.499, "gdpPercap": 19702.05581, "alpha-2": "OM", "alpha-3": "OMN", "country-code": 512, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Pakistan", "pop": 135564834, "continent": "Asia", "lifeExp": 61.818, "gdpPercap": 2049.350521, "alpha-2": "PK", "alpha-3": "PAK", "country-code": 586, "region": "Asia", "sub-region": "Southern Asia"}, {"country": "Panama", "pop": 2734531, "continent": "Americas", "lifeExp": 73.738, "gdpPercap": 7113.692252, "alpha-2": "PA", "alpha-3": "PAN", "country-code": 591, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Paraguay", "pop": 5154123, "continent": "Americas", "lifeExp": 69.4, "gdpPercap": 4247.400261, "alpha-2": "PY", "alpha-3": "PRY", "country-code": 600, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Peru", "pop": 24748122, "continent": "Americas", "lifeExp": 68.386, "gdpPercap": 5838.347657, "alpha-2": "PE", "alpha-3": "PER", "country-code": 604, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Philippines", "pop": 75012988, "continent": "Asia", "lifeExp": 68.564, "gdpPercap": 2536.534925, "alpha-2": "PH", "alpha-3": "PHL", "country-code": 608, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Poland", "pop": 38654957, "continent": "Europe", "lifeExp": 72.75, "gdpPercap": 10159.58368, "alpha-2": "PL", "alpha-3": "POL", "country-code": 616, "region": "Europe", "sub-region": "Eastern Europe"}, {"country": "Portugal", "pop": 10156415, "continent": "Europe", "lifeExp": 75.97, "gdpPercap": 17641.03156, "alpha-2": "PT", "alpha-3": "PRT", "country-code": 620, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Puerto Rico", "pop": 3759430, "continent": "Americas", "lifeExp": 74.917, "gdpPercap": 16999.4333, "alpha-2": "PR", "alpha-3": "PRI", "country-code": 630, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Romania", "pop": 22562458, "continent": "Europe", "lifeExp": 69.72, "gdpPercap": 7346.547557, "alpha-2": "RO", "alpha-3": "ROU", "country-code": 642, "region": "Europe", "sub-region": "Eastern Europe"}, {"country": "Rwanda", "pop": 7212583, "continent": "Africa", "lifeExp": 36.087, "gdpPercap": 589.9445051, "alpha-2": "RW", "alpha-3": "RWA", "country-code": 646, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Sao Tome and Principe", "pop": 145608, "continent": "Africa", "lifeExp": 63.306, "gdpPercap": 1339.076036, "alpha-2": "ST", "alpha-3": "STP", "country-code": 678, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Saudi Arabia", "pop": 21229759, "continent": "Asia", "lifeExp": 70.533, "gdpPercap": 20586.69019, "alpha-2": "SA", "alpha-3": "SAU", "country-code": 682, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Senegal", "pop": 9535314, "continent": "Africa", "lifeExp": 60.187, "gdpPercap": 1392.368347, "alpha-2": "SN", "alpha-3": "SEN", "country-code": 686, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Serbia", "pop": 10336594, "continent": "Europe", "lifeExp": 72.232, "gdpPercap": 7914.320304, "alpha-2": "RS", "alpha-3": "SRB", "country-code": 688, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Sierra Leone", "pop": 4578212, "continent": "Africa", "lifeExp": 39.897, "gdpPercap": 574.6481576, "alpha-2": "SL", "alpha-3": "SLE", "country-code": 694, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Singapore", "pop": 3802309, "continent": "Asia", "lifeExp": 77.158, "gdpPercap": 33519.4766, "alpha-2": "SG", "alpha-3": "SGP", "country-code": 702, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Slovenia", "pop": 2011612, "continent": "Europe", "lifeExp": 75.13, "gdpPercap": 17161.10735, "alpha-2": "SI", "alpha-3": "SVN", "country-code": 705, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Somalia", "pop": 6633514, "continent": "Africa", "lifeExp": 43.795, "gdpPercap": 930.5964284, "alpha-2": "SO", "alpha-3": "SOM", "country-code": 706, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "South Africa", "pop": 42835005, "continent": "Africa", "lifeExp": 60.236, "gdpPercap": 7479.188244, "alpha-2": "ZA", "alpha-3": "ZAF", "country-code": 710, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Spain", "pop": 39855442, "continent": "Europe", "lifeExp": 78.77, "gdpPercap": 20445.29896, "alpha-2": "ES", "alpha-3": "ESP", "country-code": 724, "region": "Europe", "sub-region": "Southern Europe"}, {"country": "Sri Lanka", "pop": 18698655, "continent": "Asia", "lifeExp": 70.457, "gdpPercap": 2664.477257, "alpha-2": "LK", "alpha-3": "LKA", "country-code": 144, "region": "Asia", "sub-region": "Southern Asia"}, {"country": "Sudan", "pop": 32160729, "continent": "Africa", "lifeExp": 55.373, "gdpPercap": 1632.210764, "alpha-2": "SD", "alpha-3": "SDN", "country-code": 729, "region": "Africa", "sub-region": "Northern Africa"}, {"country": "Sweden", "pop": 8897619, "continent": "Europe", "lifeExp": 79.39, "gdpPercap": 25266.59499, "alpha-2": "SE", "alpha-3": "SWE", "country-code": 752, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "Switzerland", "pop": 7193761, "continent": "Europe", "lifeExp": 79.37, "gdpPercap": 32135.32301, "alpha-2": "CH", "alpha-3": "CHE", "country-code": 756, "region": "Europe", "sub-region": "Western Europe"}, {"country": "Thailand", "pop": 60216677, "continent": "Asia", "lifeExp": 67.521, "gdpPercap": 5852.625497, "alpha-2": "TH", "alpha-3": "THA", "country-code": 764, "region": "Asia", "sub-region": "South-eastern Asia"}, {"country": "Togo", "pop": 4320890, "continent": "Africa", "lifeExp": 58.39, "gdpPercap": 982.2869243, "alpha-2": "TG", "alpha-3": "TGO", "country-code": 768, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Trinidad and Tobago", "pop": 1138101, "continent": "Americas", "lifeExp": 69.465, "gdpPercap": 8792.573126, "alpha-2": "TT", "alpha-3": "TTO", "country-code": 780, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Tunisia", "pop": 9231669, "continent": "Africa", "lifeExp": 71.973, "gdpPercap": 4876.798614, "alpha-2": "TN", "alpha-3": "TUN", "country-code": 788, "region": "Africa", "sub-region": "Northern Africa"}, {"country": "Turkey", "pop": 63047647, "continent": "Europe", "lifeExp": 68.835, "gdpPercap": 6601.429915, "alpha-2": "TR", "alpha-3": "TUR", "country-code": 792, "region": "Asia", "sub-region": "Western Asia"}, {"country": "Uganda", "pop": 21210254, "continent": "Africa", "lifeExp": 44.578, "gdpPercap": 816.559081, "alpha-2": "UG", "alpha-3": "UGA", "country-code": 800, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "United Kingdom of Great Britain and Northern Ireland", "pop": 58808266, "continent": "Europe", "lifeExp": 77.218, "gdpPercap": 26074.53136, "alpha-2": "GB", "alpha-3": "GBR", "country-code": 826, "region": "Europe", "sub-region": "Northern Europe"}, {"country": "United States of America", "pop": 272911760, "continent": "Americas", "lifeExp": 76.81, "gdpPercap": 35767.43303, "alpha-2": "US", "alpha-3": "USA", "country-code": 840, "region": "Americas", "sub-region": "Northern America"}, {"country": "Uruguay", "pop": 3262838, "continent": "Americas", "lifeExp": 74.223, "gdpPercap": 9230.240708, "alpha-2": "UY", "alpha-3": "URY", "country-code": 858, "region": "Americas", "sub-region": "Latin America and the Caribbean"}, {"country": "Zambia", "pop": 9417789, "continent": "Africa", "lifeExp": 40.238, "gdpPercap": 1071.353818, "alpha-2": "ZM", "alpha-3": "ZMB", "country-code": 894, "region": "Africa", "sub-region": "Sub-Saharan Africa"}, {"country": "Zimbabwe", "pop": 11404948, "continent": "Africa", "lifeExp": 46.809, "gdpPercap": 792.4499603, "alpha-2": "ZW", "alpha-3": "ZWE", "country-code": 716, "region": "Africa", "sub-region": "Sub-Saharan Africa"}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
