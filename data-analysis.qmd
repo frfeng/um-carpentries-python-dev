@@ -1,0 +1,58 @@
+---
+title: "Python for data analysis"
+format: 
+  html:
+    toc: true
+---
+
+
+
+
+
+
+
+
+### Bonus: interactive map plot
+
+```{python}
+import pandas as pd
+gapminder_1997 = pd.read_csv("./data/gapminder_1997.csv")
+
+test = (
+    pd.read_csv("./data/gapminder_1997.csv")
+    .replace({'country' : {'United States' : 'United States of America',
+                           'United Kingdom' : 'United Kingdom of Great Britain and Northern Ireland',
+                          }})
+    .merge(pd.read_csv("./data/country-iso.csv")
+           .rename(columns={'name' : 'country'}),
+           on='country', how='inner')
+)
+
+```
+
+```{python}
+import altair as alt
+from altair.datasets import data
+
+countries = alt.topo_feature(data.world_110m.url, 'countries')
+
+base = alt.Chart(countries).mark_geoshape().project(
+    type="equirectangular"
+)
+
+base
+```
+
+```{python}
+base.encode(
+    color='lifeExp:Q',
+    tooltip=['country:N'],
+).transform_lookup(
+    lookup='id',
+    from_=alt.LookupData(
+        test,
+        key='country-code',
+        fields=['lifeExp', 'country'],
+    )
+)
+```

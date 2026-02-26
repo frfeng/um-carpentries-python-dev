@@ -1,0 +1,5 @@
+# Quarto output directories
+_site/
+.quarto/
+/.quarto/
+**/*.quarto_ipynb

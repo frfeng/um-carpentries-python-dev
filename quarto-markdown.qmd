@@ -1,0 +1,118 @@
+---
+title: Writing Reports with Quarto Markdown
+author: Fred Feng
+date: 2026-03-01
+format: 
+  html:
+    code-fold: true
+    toc: true
+execute:
+  echo: false
+---
+
+## Introduction
+
+This report was prepared to the attention of the United Nations. It analyzes the relationship between a country's GDP, its life expectancy and CO2 emissions. Our goal is to determine to what degree a country’s economic strength or weakness may be related to its public health status and impact on climate pollution. We hypothesize that both life expectancy and CO2 emissions increase with a country's GDP.
+
+## Life expectancy and GDP
+
+### Figure
+
+```{python}
+import pandas as pd
+gapminder_1997 = pd.read_csv("./data/gapminder_1997.csv")
+```
+
+```{python}
+#| echo: true 
+#| label: fig-gapminder
+#| fig-cap: "Life Expectancy and GDP"
+import altair as alt
+
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+    color=alt.Color('continent').scale(scheme='set1'),
+    size=alt.Size('pop').title('Population (in millions)'),
+    shape='continent',
+    tooltip=['country', 
+             alt.Tooltip('pop')
+             .title('Population in million')
+             .format(',.1f')
+             ],
+).transform_calculate(
+    pop='datum.pop/1000000'
+).properties(
+    title='Do people in wealthy countries live longer?',
+    width='container',
+).interactive()
+```
+
+
+### Description
+
+```{python}
+nCountries = gapminder_1997['country'].nunique()
+
+minGDP = gapminder_1997['gdpPercap'].min()
+maxGDP = gapminder_1997['gdpPercap'].max()
+```
+
+@fig-gapminder shows the relationship between GDP per capita and life expectancy
+for a total of `{python} nCountries` countries. 
+For this set of countries, economic wealth ranged from a minimum of USD $`{python} f'{minGDP:,.0f}'` to a maximum of USD $`{python} f'{maxGDP:,.0f}'` per capita.
+
+|Summary of Data|  |
+|------|------|
+|Number of Countries|`{python} nCountries`|
+|Minimum GDP per capita|$`{python} f'{minGDP:,.0f}'`|
+|Maximum GDP per capita|$`{python} f'{maxGDP:,.0f}'`|
+
+
+## Some other analysis
+
+```{python}
+(
+    gapminder_1997
+    .query('continent == "Oceania"')
+    .style.hide(axis="index")
+)
+```
+
+
+```{python}
+
+from altair.datasets import data
+
+countries = alt.topo_feature(data.world_110m.url, 'countries')
+
+gapminder_data = (
+    gapminder_1997
+    .replace({'country' : {'United States' : 'United States of America',
+                           'United Kingdom' : 'United Kingdom of Great Britain and Northern Ireland',
+                          }})
+    .merge(pd.read_csv("./data/country-iso.csv")
+           .rename(columns={'name' : 'country'}),
+           on='country', how='inner')
+)
+
+background = alt.Chart(countries).mark_geoshape(color='lightgray', stroke='gray')
+
+foreground = alt.Chart(countries).mark_geoshape().encode(
+    color='lifeExp:Q',
+    tooltip=['country:N', 'lifeExp:Q'],
+).transform_lookup(
+    lookup='id',
+    from_=alt.LookupData(
+        gapminder_data, 
+        key='country-code', 
+        fields=['lifeExp', 'country'])
+)
+
+(background + foreground).project(
+    "equirectangular"
+).properties(
+    width='container',
+)
+
+```

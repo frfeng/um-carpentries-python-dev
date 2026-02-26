@@ -1,0 +1,362 @@
+---
+title: Python basics
+format: 
+  html:
+    toc: true
+---
+
+## Arithmetic operators
+
+At a minimum, we can use Python as a calculator.
+If we type the following into a cell, and click the run button (the triangle-shaped button that looks like a play button), we will see the output under the cell.
+Another quicker way to run the code in the selected cell is by pressing on your keyboard <kbd>Ctrl</kbd>+<kbd>Enter</kbd> (for Windows) or <kbd>Command</kbd>+<kbd>Return</kbd> (for MacOS).
+
+#### Addition
+```{python}
+2 + 3
+```
+
+#### Subtraction
+```{python}
+2 - 3
+```
+
+#### Multiplication
+```{python}
+2 * 3
+```
+
+#### Division
+```{python}
+2 / 3
+```
+
+#### Exponentiation
+
+One thing that you might need to be a little careful about is the exponentiation. If you have used Microsoft Excel, MATLAB, R, or some other programming languages, the operator for exponentiation is the caret `^` symbol. Let’s take a look at if that works in Python.
+
+```{python}
+2 ^ 3
+```
+
+Hmm. That’s not what we expected. It turns out in Python (and a few other languages), the caret symbol is used for another operation called bitwise exclusive OR.
+In Python we use double asterisks `**` for exponentiation.
+
+```{python}
+2 ** 3
+```
+
+#### Order of operations
+
+We can also use parentheses to specify what operations should be resolved first. For example, to convert 60 degrees Fahrenheit to Celsius, we can do:
+
+```{python}
+5 / 9 * (60 - 32)
+```
+
+#### Assignment operator
+
+In Python we can use a `=` symbol, which is called the assignment operator, to assign values on the right to objects on the left. 
+Let’s assign a number to a variable called "age".
+When we run the cell, it seems nothing happened. 
+But that’s only because we didn’t ask Python to display anything in the output after the assignment operation. 
+We can call the Python built-in function print() to display information in the output.
+We can also use another Python built-in function `type` to check the type of an object, in this case, the variable called "age". 
+And we can see the type is "int", standing for integers.
+
+```{python}
+age = 26
+print(age)
+print(type(age))
+```
+
+Let’s create another variable called "pi", and assign it with a value of 3.1415. 
+We can see that this time the variable has a type of "float" for floating-point number, or a number with a decimal point.
+
+```{python}
+pi = 3.1415
+print(pi)
+print(type(pi))
+```
+
+We can also assign string or text values to a variable. 
+Let’s create a variable called "name", and assign it with a value "Ben".
+
+```{python}
+#| error: true
+
+name = Ben
+print(name)
+```
+
+We got an error message. 
+As it turns out, to make it work in Python we need to wrap any string values in quotation marks. We can use either single quotes `'` or double quotes `"`. 
+We just need to use the same kind of quotes at the beginning and end of the string. 
+You do need to use the same kind of quotes at the beginning and end of the string. 
+We can also see that the variable has a type of "str", standing for strings.
+
+#### Single vs Double Quotes
+
+Python supports using either single quotes `'` or double quotes `"` to specify strings. 
+There’s no set rules on which one you should use.
+- Some Python style guide suggests using single-quotes for shorter strings (the technical term is string literals), as they are a little easier to type and read, and using double-quotes for strings that are likely to contain single-quote characters as part of the string itself (such as strings containing natural language, e.g. "I'll be there.").
+- Some other Python style guide suggests being consistent with your choice of string quote character within a file. Pick `'` or `"` and stick with it.
+
+Assigning values to objects
+
+Try to assign values to some objects and observe each object after you have assigned a new value. What do you notice?
+
+```{python}
+name = "Ben"
+print(name)
+
+name = "Harry Potter"
+print(name)
+```
+
+When we assign a value to an object, the object stores that value so we can access it later. 
+However, if we store a new value in an object we have already created (like when we stored "Harry Potter" in the name object), it replaces the old value.
+
+#### Guidelines on naming objects
+
+- You want your object names to be explicit and not too long.
+- They cannot start with a number (2x is not valid, but x2 is).
+- Python is case sensitive, so for example, weight_kg is different from Weight_kg.
+- You cannot use spaces in the name.
+- There are some names that cannot be used because they are the names of fundamental functions in Python (e.g., if, else, `for; run help("keywords") for a complete list). You may also notice these keywords change to a different color once you type them (a feature called “syntax highlighting”).
+- It’s best to avoid dots (.) within names. Dots have a special meaning (methods) in Python and other programming languages.
+- It is recommended to use nouns for object names and verbs for function names.
+- Be consistent in the styling of your code, such as where you put spaces, how you name objects, etc. Using a consistent coding style makes your code clearer to read for your future self and your collaborators. The official Python naming conventions can be found [here](https://peps.python.org/pep-0008/#naming-conventions).
+
+#### Exercise: Bad names for objects
+
+Try to assign values to some new objects. What do you notice? 
+After running all four lines of code bellow, what value do you think the object `Flower` holds?
+
+```{python}
+#| error: true
+
+1number = 3
+
+```
+
+```{python}
+#| error: true
+
+favorite number = 12
+```
+
+Notice that we get an error when we try to assign values to `1number` and `favorite number`. 
+This is because we cannot start an object name with a numeral and we cannot have spaces in object names. 
+
+```{python}
+Flower = "marigold"
+flower = "rose"
+
+print(Flower)
+print(flower)
+```
+
+The object `Flower` still holds “marigold.” This is because Python is case-sensitive, so running `flower = "rose"` does NOT change the `Flower` object. 
+This can get confusing, and is why we generally avoid having objects with the same name and different capitalization.
+
+## Data structures
+
+### Python list
+
+Rather than storing a single value to an object, we can also store multiple values into a single object called a list. 
+A Python list is indicated with a pair of square brackets `[]`, and different items are separated by a comma. 
+For example, we can have a list of numbers, or a list of strings.
+
+```{python}
+squares = [1, 4, 9, 16, 25]
+print(squares)
+
+names = ["Sara", "Tom", "Jerry", "Emma"]
+print(names)
+```
+
+We can also check the type of the object by calling the built-in `type` function.
+
+```{python}
+type(names)
+```
+
+An item from a list can be accessed by its position using the square bracket notation. 
+Say if we want to get the first name, "Sara", from the list, we can do
+
+```{python}
+names[1]
+```
+
+That’s not what we expected. 
+Python uses something called 0-based indexing. 
+In other words, it starts counting from 0 rather than 1. 
+If we want to get the first item from the list, we should use an index of 0. 
+Let's try that.
+
+```{python}
+names[0]
+```
+
+Now see if you can get the *last* name from the list.
+
+```{python}
+names[3]
+```
+
+A cool feature in Python is it also supports negative indexing. 
+If we just want the last time on a list, we can pass the index of `-1`.
+
+```{python}
+names[-1]
+```
+
+### Python dictionaries
+
+Python lists allow us to organize items by their position. 
+Sometimes we want to organize items by their "keys". 
+This is when a Python dictionary comes in handy.
+
+A Python dictionary is indicated with a pair of curly brackets `{}` and composed of entries of key-value pairs. 
+The key and value are connected via a colon `:`, and different entries are separated by a comma `,`. 
+For example, let’s create a dictionary of capitals. 
+We can separate the entries in multiple lines to make it a little easier to read, especially when we have many entries. In Python we can break lines inside braces (e.g., `()`, `[]`, `{}`) without breaking the code. 
+This is a common technique people use to avoid long lines and make their code more readable.
+
+```{python}
+capitals = {"France": "Paris",
+            "USA": "Washington DC",
+            "Germany": "Berlin",
+            "Canada": "Ottawa"}
+```
+
+We can check the type of the object by calling the built-in `type` function.
+
+```{python}
+type(capitals)
+```
+
+An entry from a dictionary can be accessed by its key using the square bracket notation. 
+Say if we want to get the capital for USA, , we can do
+
+```{python}
+capitals['USA']
+```
+
+Now see if you can get the capital from another country.
+
+```{python}
+capitals["Canada"]
+```
+
+## Calling functions
+
+So far we have used two Python built-in functions, `print` to print some values on the screen, and `type` to show the type of an object. 
+The way we called these functions is to first type the name of the function, followed by a pair of parenthesis. 
+Many functions require additional pieces of information to do their job. 
+We call these additional values "arguments" or "parameters". 
+We pass the arguments to a function by placing values in between the parenthesis. 
+A function takes in these arguments and does a bunch of "magic" behind the scenes to output something we're interested in.
+
+Do all functions need arguments? Let's test some other functions.
+It is common that we may want to use a function from a module. 
+In this case we will need to first import the module to our Python session. 
+We do that by using the import keyword followed by the module's name. 
+To call a function from a module, we type the name of the imported module, followed by a dot `.`, followed by the name of the function that we wish to call.
+
+Below we import the operating system module and call the function `getcwd` to get the current working directory.
+
+```{python}
+import os
+os.getcwd()
+```
+
+Sometimes the function resides inside a submodule, we can specify the submodule using the dot notation. 
+In the example below, we call the `today` function which is located in the date submodule inside the datetime module that we imported.
+
+```{python}
+import datetime
+datetime.date.today()
+```
+
+While some functions, like those above, don't need any arguments, in other functions we may want to use multiple arguments. 
+When we are using multiple arguments, we separate the arguments with commas. 
+For example, we can use the `print` function to print two strings:
+
+```{python}
+print("My name is", name)
+```
+
+Pro-tip:
+
+Each function has a help page that documents what a function does, what arguments it expects and what it will return. 
+You can bring up the help page a few different ways. You can type `?` followed by the function name, for example, `?print`, A help document should pop up.
+You can also place the mouse curse next to a function, and press <kbd>Shift</kbd>+<kbd>Tab</kbd> to see its help doc.
+
+
+#### Learning more about functions
+
+Look up the function `round`. 
+What does it do? What will you get as output for the following lines of code?
+
+```{python}
+round(3.1415)
+round(3.1415, 3)
+```
+
+The `round` function rounds a number to a given precision. 
+By default, it rounds the number to an integer (in our example above, to 3). 
+If you give it a second number, it rounds it to that number of digits (in our example above, to 3.142)
+
+#### Position of the arguments in functions
+
+Which of the following lines of code will give you an output of 3.14? 
+For the one(s) that don't give you 3.14, what do they give you?
+
+
+```{python}
+round(number=3.1415)
+```
+
+```{python}
+round(number=3.1415, ndigits=2)
+```
+
+```{python}
+round(ndigits=2, number=3.1415)
+```
+
+```{python}
+#| error: true
+
+round(2, 3.1415)
+```
+
+The 2nd and 3rd lines will give you the right answer because the arguments are named, and when you use names the order doesn't matter. 
+The 1st line will give you 3 because the default number of digits is 0. 
+Then 4th line will give you 2 because, since you didn't name the arguments, `x=2` and `digits=3.1415`.
+
+Sometimes it is helpful - or even necessary - to include the argument name, but often we can skip the argument name, if the argument values are passed in a certain order. 
+If all this function stuff sounds confusing, don't worry! We will see a bunch of examples as we go that will make things clearer.
+
+### Comments
+
+Sometimes we may want to write some comments in our code to help us remember what our code is doing, but we don't want Python to think these comments are a part of the code you want to evaluate. 
+That’s where comments come in. 
+Anything after a `#` sign in your code will be ignored by Python. 
+For example, let's say we wanted to make a note of what each of the functions we just used do:
+
+```{python}
+datetime.date.today()   # returns today's date
+```
+
+```{python}
+os.getcwd()    # returns our current working directory
+```
+
+Some other time we may want to temporarily disable some code without deleting them. We can comment out lines of code by placing a `#` sign at the beginning of each line.
+
+A handy keyboard shortcut for that is move the mouse cursor to the line you wish to comment out, then press <kbd>Ctrl</kbd>+<kbd>/</kbd> (for Windows) or <kbd>Command</kbd>+<kbd>/</kbd> (for MacOS) to toggle through comment and uncomment. If you wish to comment out multiple lines, first select all the lines, then use the same keyboard shortcut to comment or uncomment.
+
+

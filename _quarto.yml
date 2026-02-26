@@ -1,0 +1,20 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  sidebar:
+    search: false
+    style: docked
+    contents:
+      - text: Python basics
+        href: python-basics.qmd
+      - text: Python for plotting
+        href: plotting.qmd
+      - text: Python for data analysis
+        href: data-analysis.qmd
+      - text: Writing reports with Quarto markdown
+        href: quarto-markdown.qmd
+
+execute:
+  freeze: auto

@@ -1,0 +1,453 @@
+---
+title: Python for plotting
+format: 
+  html:
+    toc: true
+---
+
+### Read in the data
+
+```{python}
+import pandas as pd
+```
+
+```{python}
+#| error: true
+pd.read_csv()
+```
+
+
+```{python}
+
+gapminder_1997 = pd.read_csv("./data/gapminder_1997.csv")
+gapminder_1997
+```
+
+Check the object type
+
+```{python}
+type(gapminder_1997)
+```
+
+### Creating our first plot
+
+```{python}
+import altair as alt
+
+alt.Chart(gapminder_1997).mark_circle()
+```
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x='gdpPercap',
+)
+```
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x='gdpPercap',
+    y='lifeExp',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y='lifeExp',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+).properties(
+    title='Do people in wealthy countries live longer?',
+)
+```
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle(size=60, color='red', opacity=0.3).encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+).properties(
+    title='Do people in wealthy countries live longer?',
+)
+```
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+    color='continent',
+).properties(
+    title='Do people in wealthy countries live longer?',
+)
+```
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+    color=alt.Color('continent').scale(scheme='set1'),
+).properties(
+    title='Do people in wealthy countries live longer?',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+    color=alt.Color('continent').scale(scheme='set1'),
+    size=alt.Size('pop').title('Population'),
+).properties(
+    title='Do people in wealthy countries live longer?',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+    color=alt.Color('continent').scale(scheme='set1'),
+    size=alt.Size('pop').title('Population (in millions)'),
+).transform_calculate(
+    pop='datum.pop/1000000'
+).properties(
+    title='Do people in wealthy countries live longer?',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+    color=alt.Color('continent').scale(scheme='set1'),
+    size=alt.Size('pop').title('Population (in millions)'),
+    shape='continent',
+    tooltip=['country', 
+             alt.Tooltip('pop')
+             .title('Population in million')
+             .format(',.1f')
+             ],
+).transform_calculate(
+    pop='datum.pop/1000000'
+).properties(
+    title='Do people in wealthy countries live longer?',
+).interactive()
+```
+
+
+### Discrete Plots
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x='lifeExp',
+    y='continent',
+    color='continent',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_circle().encode(
+    x=alt.X('lifeExp').scale(zero=False),
+    y='continent',
+    color=alt.Color('continent').legend(None),
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_tick().encode(
+    x=alt.X('lifeExp').scale(zero=False),
+    y='continent',
+    color=alt.Color('continent').legend(None),
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_boxplot().encode(
+    x=alt.X('lifeExp').scale(zero=False),
+    y='continent',
+    color=alt.Color('continent').legend(None),
+)
+```
+
+### Univariate Plots
+
+```{python}
+alt.Chart(gapminder_1997).mark_bar().encode(
+    x=alt.X('lifeExp').bin(),
+    y='count()',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_bar().encode(
+    x=alt.X('lifeExp').bin(step=2).title('Life expectancy'),
+    y='count()',
+)
+```
+
+```{python}
+alt.Chart(gapminder_1997).mark_bar().encode(
+    x=alt.X('lifeExp').bin(step=2).title('Life expectancy'),
+    y='count()',
+    color='continent',
+).properties(
+    height=300,
+    width=600,
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_line().encode(
+    x='lifeExp',
+    y='density:Q',
+).transform_density(
+    'lifeExp',
+    as_=['lifeExp', 'density'],
+)
+```
+
+
+```{python}
+alt.Chart(gapminder_1997).mark_area(opacity=0.5).encode(
+    x='lifeExp',
+    y='density:Q',
+).transform_density(
+    'lifeExp',
+    as_=['lifeExp', 'density'],
+)
+```
+
+### Plotting for data exploration
+
+```{python}
+gapminder = pd.read_csv("./data/gapminder_data.csv")
+
+gapminder
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_circle().encode(
+    x='year',
+    y='lifeExp',
+    color='continent',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_circle().encode(
+    x='year:O',
+    y='lifeExp',
+    color='continent',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color='continent',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color='continent',
+    detail='country',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color='continent',
+    detail='country',
+).transform_filter(
+    alt.datum.continent == 'Asia'
+)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+).transform_filter(
+    alt.datum.country == 'United States'
+)
+```
+
+
+
+
+### Layered charts
+
+```{python}
+base = alt.Chart(gapminder).encode(
+    x='year:O',
+    y='lifeExp',
+).transform_filter(
+    alt.datum.country == 'United States'
+)
+
+base.mark_line() + base.mark_point()
+```
+
+```{python}
+base = alt.Chart(gapminder_1997).encode(
+    x=alt.X('gdpPercap').title('GDP Per Capita').scale(type='log'),
+    y=alt.Y('lifeExp').title('Life Expectancy'),
+)
+
+points = base.mark_circle().encode(
+    tooltip='country'
+)
+
+points
+```
+
+```{python}
+reg_line = base.mark_line(color='red').transform_regression(
+    on='gdpPercap', regression='lifeExp', method='log',
+)
+reg_line
+```
+
+```{python}
+points + reg_line
+```
+
+
+### Facets
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color='continent',
+    detail='country',
+)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color=alt.Color('continent').legend(None),
+    detail='country',
+).facet(column='continent')
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color=alt.Color('continent').legend(None),
+    detail='country',
+).properties(
+    height=150, 
+    width=500,
+).facet(row='continent')
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color=alt.Color('continent').legend(None),
+    detail='country',
+).facet(alt.Facet('continent').title(None), columns=3)
+```
+
+
+```{python}
+alt.Chart(gapminder).mark_line().encode(
+    x='year:O',
+    y='lifeExp',
+    color=alt.Color('continent').legend(None),
+    detail='country',
+).facet(alt.Facet('continent').title(None), columns=3
+)
+# .save('awesome_plot.png', ppi=300)
+```
+
+### Interactive charts
+
+```{python}
+base = alt.Chart(gapminder_1997).mark_circle().encode(
+    x='gdpPercap',
+    y='lifeExp',
+    color='continent',
+)
+
+selection = alt.selection_point(fields=['continent'], bind='legend')
+
+base.encode(
+    opacity=alt.when(selection).then(alt.value(0.9)).otherwise(alt.value(0.2)),
+).add_params(
+    selection
+)
+
+```
+
+```{python}
+chart = alt.Chart(gapminder).mark_circle().encode(
+    x=alt.X('gdpPercap').scale(type='log', domain=[100, 1e5]),
+    y=alt.Y('lifeExp').scale(domain=[20, 90]),
+    size=alt.Size('pop').legend(None),
+    tooltip='country',
+)
+
+slider = alt.binding_range(
+    min=1952,
+    max=2007,
+    step=5,
+    name='Year: '
+)
+
+year_selection = alt.selection_point(
+    fields=['year'],
+    bind=slider,
+    value={'year': 1952}
+)
+
+chart.add_params(
+    year_selection
+).transform_filter(
+    year_selection
+)
+```
+
