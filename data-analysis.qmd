@@ -5,24 +5,1123 @@ format:
     toc: true
 ---
 
+## Getting started
+
+Yesterday we spent a lot of time making plots in Python using the Altair library. 
+Visualizing data using plots is a very powerful skill in Python, but what if we would like to work with only a subset of our data? 
+Or clean up messy data, calculate summary statistics, create a new variable, or join two datasets together? 
+There are several different methods for doing this in Python, and we will touch on a few today using the fast and powerful pandas library.
+
+- First, navigate to the `un-reports` directory in your Command Line Interface.
+- Launch JupyterLab.
+
+```{bash}
+jupyter lab
+```
+
+- Once JupyterLab is opened in your web browser, you can check you are at the correct directory by seeing if the JupyterLab File Browser (located on the left side panel) shows the folders and files inside the `un-reports` directory. 
+- Create a new Jupyter notebook file for our work. 
+    - Make sure you are at the `un-reports` home directory.
+    - On the Launcher tab (the main window on the right) click "Python 3" under the Notebook category. 
+- Then you should see a new file named `Untitled.ipynb` been created on the File Browser. Left-click the file on the File Browser and rename it to `gapminder_data_analysis.ipynb`.
+
+### Reading in the data
+
+We will start by reading in the complete gapminder dataset that we used yesterday into our fresh new Jupyter notebook. 
+Let's type the code into a cell: 
+
+```{python}
+#| error: true
+gapminder = pd.read_csv("./data/gapminder_data.csv")
+```
+
+If we look in the console now, we'll see we've received an error message.
+What this means is that Python did not recognize the `pd` part of the code and thus cannot find the `read_csv` function we are trying to call. The reason for this usually is that we are trying to run a function from a library that we have not yet imported. This is a very common error message that you will probably see again when using Python. It's important to remember that you will need to import any libraries you want to use into Python each time you start a new notebook. The `read_csv` function comes from the pandas library so we will just import the pandas library and run the code again.
 
 
+Now that we know what's wrong, We will use the `read_csv` function from the pandas library. 
+Import the pandas library (along with another common library numpy) and read in the gapminder dataset using the code below.
+
+```{python}
+import numpy as np
+import pandas as pd
+
+gapminder = pd.read_csv("./data/gapminder_data.csv")
+gapminder     # this line is just to show the data in the notebook output below
+```
+
+The output above gives us an overview of the data with its first and last few rows, the names of the columns, and the numbers of rows and columns.
+
+If we want more information, we can apply the `info` method to a data frame to print some basic information about it.
+In Python we use the dot notation to apply a method to an object.
+
+Note when applying a method, we always need to follow the method name by a pair of parentheses, even if we are not passing any arguments to the method. 
+
+```{python}
+gapminder.info()
+```
+
+- The first line in the output indicates `gapminder`, the output from the `pd.read_csv` function that we called earlier, is a pandas DataFrame.
+A pandas DataFrame is a two-dimensional rectangular table of data with rows and columns.
+It is the main data structure that we will be dealing with when working with pandas.
+- The information also shows the data type ("Dtype") of each column. 
+  - Not surprisingly, the `year` column has an integer data type ("int64").
+  - A few other columns have the data type of floating number ("float64"). 
+  - The `country` column has a data type of "object", indicating the data is a string or mixed type.
 
 
+We can use the Python built-in function `type`to see the type of the output of the `pd.read_csv` function, an object now called `gapminder`, with the code below. 
 
+```{python}
+type(gapminder)
+```
+
+The object is a pandas DataFrame, a two-dimensional tabular data with rows and columns.
+It is the main data structure that we will be dealing with when working with pandas. -->
+
+Sometimes (especially when our data has many rows) we just want to take a look at the first few rows of the data. We can apply the `head` method to select the first few rows of a data frame. 
+
+```{python}
+gapminder.head()
+```
+
+By default, the `head()` method selects the first 5 rows of the data frame. You can change the number of rows by passing a number as an argument to the method. 
+For example, we can use the code below to select the first 3 rows.
+
+```{python}
+gapminder.head(3)
+```
+
+Similarly, we can apply the `tail()` method to select the *last* few rows of a data frame. 
+
+```{python}
+gapminder.tail()
+```
+
+In Python we can also use the dot notation to access an attributes of an object.
+Unlike methods, attributes do not take any arguments thus are not followed by a pair of braces.
+
+For example, a pandas DataFrame has an attribute `shape` that stores the information of the dimensionality of the DataFrame (in terms of the number of rows and columns).
+
+```{python}
+gapminder.shape
+```
+
+Now we have the tools necessary to work through this lesson.
+
+### An introduction to data analysis with pandas
+
+#### Get stats fast with `describe`
+
+Pandas has a handy method `describe` that will generate the summary statistics of the data.
+We can apply that function to our lifeExp column using the `summarize` function. Here's what that looks like:
+
+```{python}
+gapminder.describe()
+```
+
+The output above shows the summary (or descriptive) statistics for the four numerical columns in our data.
+
+If we are interested in specific columns with specific statistics, we can also apply the `agg()` method to aggregate a column based on some aggregation functions.
+
+Let's say we would like to know what is the mean life expectancy in the dataset. 
+
+```{python}
+(
+    gapminder
+    .agg({'lifeExp' : 'mean'})
+)
+```
+
+If we want to give the aggregated data a new name, we can do 
+```{python}
+(
+    gapminder
+    .agg(mean_lifeExp=('lifeExp', 'mean'))
+)
+```
+
+Other aggregation functions for common descriptive statistics include `median`, `min`, `max`, `std` (for standard deviation), and `var` (for variance). 
+
+If we are interested in getting the 5th and 95th percentile of the life expectancy, we can use the `quantile` method.
+In this case because we need to pass some arguments to the method (i.e., the specific percentiles we are interested), we can use a lambda function.
+
+```{python}
+(
+    gapminder
+    .agg({'lifeExp' : lambda x: x.quantile([0.05, 0.95])})
+)
+```
+
+### Narrow down rows with `query`
+
+Let's take a look at the value we just calculated, which tells us the mean life expectancy for all rows in the data was 59.47. That seems a bit low, doesn't it? What's going on?
+
+Well, remember the dataset contains rows from many different years and many different countries. It's likely that life expectancy has increased overtime, so it may not make sense to average over all the years at the same time.
+
+Use the `max` function to find the most recent year in the data set.
+
+```{python}
+(
+    gapminder
+    .agg({'year': 'max'})
+)
+```
+
+So we see that the most recent year in the dataset is 2007. 
+Let's calculate the life expectancy for all countries for only that year. 
+To do that, we will apply the `query` method to only use the rows for that year before calculating the mean life expectancy.
+
+```{python}
+(
+    gapminder
+    .query("year == 2007")
+    .agg({'lifeExp' : 'mean'})
+)
+```
+
+### Querying the dataset
+
+What is the mean GDP per capita for the first year in the dataset? 
+**Hint**: The data frame has a column called "gdpPercap".
+
+Identify the earliest year in our dataset by applying the `agg` method.
+
+```{python}
+(
+    gapminder
+    .agg({'year': 'min'})
+)
+```
+
+We see here that the first year in the dataset is 1952. 
+Query the data to only include year 1952, and determine the mean GDP per capita.
+
+```{python}
+(
+    gapminder
+    .query("year == 1952")
+    .agg({'gdpPercap': 'mean'})
+)
+```
+
+By chaining the two methods `query` and `agg` we were able to calculate the mean GDP per capita in the year 1952.
+
+Notice how the method chaining allows us to combine these two simple steps into a more complicated data extraction?
+We took the data, queried the `year` column, selected the `gdpPercap` columns, then took its mean value. 
+The string argument we passed to `query` needs to be an expression that will return TRUE or FALSE for each row. 
+We use `==` (double equals) when evaluating if two values are equal, and we use `=` (single equal) when assigning values. 
+Try changing the code above to use `query("year = 2007")` and see what happens.
+
+Other common Python comparison operators 
+- `>` greater than
+- `<` less than
+- `>=` greater than or equal to 
+- `<=` less than or equal to
+- `==` equal
+- `!=` not equal
+
+We can also use the operator `==` to evaluate if two strings are the same. 
+For example, the code below returns all the rows from the United States.
+
+```{python}
+(
+    gapminder
+    .query("country == 'United States'")
+)
+```
+
+- **Note:** In a `query` expression, any string values (e.g., *United States* in the code above) need to be wrapped with quotation marks.
+- **Note:** In a `query` expression, any column names that does not include any special characters (e.g., a white space) do not need to be wrapped with anything. However, if a column name does include special characters, the name needs to be wrapped with a pair of backticks ``` `` ``` (the key above the <kbd>Tab</kbd> key on your keyboard).
+
+Oftentimes we may wish to query the data based on more than a single criterion. 
+In a `query()` expression we can combine multiple criteria with Python logical operators `and` or `or`. 
+For example, the code below returns all the rows that are from the United States *and* after 2000.
+
+```{python}
+(
+    gapminder
+    .query("country == 'United States' and year > 2000")
+)
+```
+
+Note if the logical operators are all `and`, we can also separate them by chaining multiple `query` methods. 
+The code below generates the same results as above. 
+
+```{python}
+(
+    gapminder
+    .query("country == 'United States'")
+    .query("year > 2000")
+)
+```
+
+Sometimes we may wish to query the data based on whether a value is from a list or not. 
+In a `query` expression we can use the Python membership operator `in` to achieve that. 
+For example, the code below returns all the rows from a list of countries (the United States and Canada).
+
+```{python}
+(
+    gapminder
+    .query("country in ['United States', 'Canada']")
+)
+```
+
+In a `query` expression we can refer to variables in the environment by prefixing them with an ‘@’ character. For example, the code below generates the same results as above.
+
+```{python}
+country_list = ['United States', 'Canada']
+
+(
+    gapminder
+    .query("country in @country_list")
+)
+```
+
+Lastly, we can use the `not in` operator to evaluate if a value is *not* in a list. 
+For example, the code below returns all the rows for 2007 in the Americas except for the United States and Canada. 
+
+```{python}
+(
+    gapminder
+    .query("year == 2007")
+    .query("continent == 'Americas'")
+    .query("country not in ['United States', 'Canada']")
+)
+```
+
+### Grouping rows using `groupby`
+
+We see that the life expectancy in 2007 is much larger than the value we got using all of the rows. 
+It seems life expectancy is increasing which is good news. 
+But now we might be interested in calculating the mean for each year. 
+Rather than doing a bunch of different `query`'s for each year, we can instead use the `groupby` method. 
+This method allows us to tell the code to treat the rows in logical groups, so rather than aggregating over all the rows, we will get one summary value for each group. 
+"Group by" is often often referred to as [split-apply-combine](https://pandas.pydata.org/docs/user_guide/groupby.html). 
+
+```{python}
+(
+    gapminder
+    .groupby('year')
+)
+```
+
+
+If we just apply the `groupby` method to our data frame, we would only get a data object called "DataFrameGroupBy". 
+This is because this method only group the data based on our specification, in this case, by year. 
+We have not specify what kind of the aggregation functions that we wish to apply to each of the groups. 
+
+We can take a closer look at the data object after the `groupby` by its `indices` property. 
+
+```{python}
+(
+    gapminder
+    .groupby('year')
+    .indices
+)
+```
+
+It shows the indices of each group (i.e., each year in this case).
+
+We can double-check the indices of the first group by manually querying the data for year 1952.
+The first column in the output shows the indices. 
+
+```{python}
+(
+    gapminder
+    .query("year == 1952")
+)
+```
+
+In practice, we will just trust the `groupby` method will do its job, and just apply aggregation functions of our interest by calling the aggregation method `agg` after the `groupby`.
+
+```{python}
+(
+    gapminder
+    .groupby('year')
+    .agg({'lifeExp' : 'mean'})
+)
+```
+
+The `groupby` method expects you to pass in the name of a column (or a list of columns) in your data. 
+
+Exercise: Try calculating the mean life expectancy by continent.
+
+```{python}
+(
+    gapminder
+    .groupby('continent')
+    .agg({'lifeExp' : 'mean'})
+)
+```
+
+By chaining the two methods `groupby` and `agg` we are able to calculate the mean life expectancy by continent.
+
+
+Sometimes we may wish to apply more than one aggregation method. 
+For example, we may want to know the mean and minimum life expectancy by continents.
+To do so, we can use the aggregation method called `agg` and pass it a list of aggregation methods. 
+
+```{python}
+(
+    gapminder
+    .groupby('continent')
+    .agg({'lifeExp' : ['mean', 'min']})
+)
+```
+
+### Sort data with `sort_values`
+
+The `sort_values` method allows us to sort our data by some value. 
+Let's use the full gapminder data. 
+We will take the mean value for each continent in 2007 and then sort it so the continents with the longest life expectancy are on top. 
+Which continent might you guess has be the highest life expectancy before running the code?
+
+```{python}
+(
+    gapminder
+    .query("year == 2007")
+    .groupby('continent')
+    .agg({'lifeExp' : 'mean'})
+    .sort_values('lifeExp', ascending=False)
+)
+```
+
+Notice we passed the argument `ascending=False` to the `sort_values` method to sort the values in a descending order so the largest values are on top. 
+The default is to put the smallest values on top.
+
+### Make new variables with `assign`
+
+Sometimes we want to create a new column in our data.
+We can use the pandas `assign` method to assign new columns to a data frame.
+
+We have a column for the population and the GDP per capita. 
+If we wanted to get the total GDP, we could multiply the per capita GDP values by the total population. 
+Below is what the code would look like:
+
+Here we use the [`lambda`](https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions) function.
+
+```{python}
+(
+    gapminder
+    .assign(gdp=lambda df: df['pop'] * df['gdpPercap'])
+)
+```
+
+This will add a new column called "gdp" to our data. 
+We use the column names as if they were regular values that we want to perform mathematical operations on and provide the name in front of an equals sign.
+
+## Assigning multiple columns
+We can also assign multiple columns by separating them with a comma inside `assign`. Try making a new column for this data frame called popInMillions that is the population in million. 
+
+```{python}
+(
+    gapminder
+    .assign(
+        gdp=lambda df: df['pop'] * df['gdpPercap'],
+        popInMillions=lambda df: df['pop'] / 1_000_000,
+        )
+)
+```
+
+### Subset columns
+
+Sometimes we may want to select a subset of columns from our data based on the column names. 
+If we want to select a single column, we can use the square bracket `[]` notation. 
+For example, if we want to select the population column from our data, we can do:
+
+```{python}
+gapminder['pop']
+```
+
+If we want to select multiple columns, we can pass a list of column names into (another) pair of square brackets. 
+
+```{python}
+gapminder[['pop', 'year']]
+```
+
+**Note:** There are two nested pairs of square brackets in the code above. 
+The outer square brackets is the notation for selecting columns from a data frame by name. 
+The inner square brackets define a Python list that contains the column names. 
+Try removing one pair of brackets and see what happens. 
+
+
+Another way to select columns is to use the `filter` method. 
+The code below gives the same output as the above. 
+
+```{python}
+(
+    gapminder
+    .filter(['pop', 'year'])
+)
+```
+
+We can also apply the `drop` method to drop/remove particular columns. 
+For example, if we want everything but the continent and population columns, we can do:
+
+```{python}
+(
+    gapminder
+    .drop(columns=['continent', 'pop'])
+)
+```
+
+Exercise: selecting columns 
+
+Create a data frame with only the `country`, `continent`, `year`, and `lifeExp` columns. 
+
+There are multiple ways to do this exercise. Here are two different possibilities. 
+
+```{python}
+(
+    gapminder
+    .filter(['country', 'continent', 'year', 'lifeExp'])
+)
+```
+
+```{python}
+(
+    gapminder
+    .drop(columns=['pop', 'gdpPercap'])
+)
+```
+
+#### Bonus: Additional features of the `filter` method
+
+The `filter` method can be used to filter columns by their names. It may become handy if you are working with a dataset that has a lot of columns. For example, let's say we wanted to select the year column and all the columns that contain the letter "e". You can do that with:
+
+```{python}
+(
+    gapminder
+    .filter(like='e')
+)
+```
+
+This returns the four columns we are interested in. 
+
+#### Applying `filter` with regular expression
+
+For those of you who know regular expression (pattern matching in text), the `filter` method also supports it. For example, let’s say we want to select all the columns that start with the letter “c”. We can do that with:
+
+```{python}
+(
+    gapminder
+    .filter(regex='^c')
+)
+```
+
+Similarly, if we want to select all the columns that end with the letter “p”. We can do that with:
+
+```{python}
+(
+    gapminder
+    .filter(regex='p$')
+)
+```
+
+### Changing the shape of the data
+
+Data comes in many shapes and sizes, and one way we classify data is either "wide" or "long." 
+Data that is "long" has one row per observation. 
+The gapminder data is in a long format. 
+We have one row for each country for each year and each different measurement for that country is in a different column. 
+We might describe this data as "tidy" because it makes it easy to work with pandas and Altair. 
+As tidy as it may be, sometimes we may want our data in a "wide" format. 
+Typically in "wide" format each row represents a group of observations and each value is placed in a different column rather than a different row. 
+For example maybe we want only one row per country and want to spread the life expectancy values into different columns (one for each year).
+
+The pandas methods `pivot` and `melt` make it easy to switch between the two formats.
+
+```{python}
+(
+    gapminder
+    .filter(['country', 'continent', 'year', 'lifeExp'])
+    .pivot(columns='year', 
+           index=['country', 'continent'], 
+           values='lifeExp')
+)
+```
+
+Notice here that we tell `pivot` which columns to pull the names we wish our new columns to be named from the year variable, 
+and the values to populate those columns from the lifeExp variable. 
+We see that the resulting table has new columns by year, and the values populate it with country and continent dictating the rows.
+
+The pandas `melt` method allows us to "melt" a table from wide format to long format. 
+The code below converts our wide table back to the long format. 
+
+```{python}
+(
+    gapminder
+    .filter(['country', 'continent', 'year', 'lifeExp'])
+    .pivot(columns='year', 
+           index=['country', 'continent'], 
+           values='lifeExp')
+    .reset_index()
+    .melt(id_vars=['country', 'continent'],
+          value_name='lifeExp')
+)
+```
+
+Before we move on to more data cleaning, let's create the final gapminder data frame we will be working with for the rest of the lesson! 
+
+#### Final Americas 2007 gapminder dataset
+- Read in the `gapminder_data.csv` file.
+- Filter out the year 2007 and the continent "Americas". 
+- Drop the `year` and `continent` columns from the data frame.
+- Save the new data frame into a variable called `gapminder_2007`. 
+
+```{python}
+gapminder_2007 = (
+    gapminder
+    .query("year == 2007 and continent == 'Americas'")
+    .drop(columns=['year', 'continent'])
+)
+```
+
+Awesome! This is the data frame we will be using later on in this lesson. 
+
+### Reviewing Git and GitHub
+
+Now that we have our gapminder data prepared, let's use what we learned about git and GitHub in the previous lesson to add, commit, and push our changes.  
+
+Open Terminal/Git Bash, if you do not have it open already. First we'll need to navigate to our un-report directory.
+
+Let's start by printing our current working directory and listing the items in the directory, to see where we are. 
+
+```{bash}
+pwd
+ls
+```
+
+Now, we'll navigate to the un-report directory. 
+
+```{bash}
+cd ~/Desktop/un-report  
+ls
+```
+
+To start, let's pull to make sure our local repository is up to date. 
+```{bash}
+git status
+git pull
+```
+
+Not let's add and commit our changes. 
+
+```{bash}
+git status
+git add
+git status "gapminder_data_analysis.ipynb"  
+git commit -m "Create data analysis file"  
+```
+
+Finally, let's check our commits and then push the commits to GitHub. 
+
+```{bash}
+git status
+git log --online  
+git push 
+git status
+``` 
+
+## Cleaning up data
+
+Researchers are often pulling data from several sources, and the process of making data compatible with one another and prepared for analysis can be a large undertaking. 
+Luckily, there are many functions that allow us to do this with pandas. 
+We've been working with the gapminder dataset, which contains population and GDP data by year. 
+In this section, we practice cleaning and preparing a second dataset containing CO2 emissions data by country and year, sourced from [the UN](https://data.un.org/_Docs/SYB/CSV/SYB63_310_202009_Carbon%20Dioxide%20Emission%20Estimates.csv).
+
+It's always good to go into data cleaning with a clear goal in mind. 
+Here, we'd like to prepare the CO2 UN data to be compatible with our gapminder data so we can directly compare GDP to CO2 emissions. 
+To make this work, we'd like a data frame that contains a column with the country name, and columns for different ways of measuring CO2 emissions. 
+We will also want the data to be collected as close to 2007 as possible (the last year we have data for in gapminder). 
+Let's start with reading the data using pandas's `read_csv` function.
+
+
+```{python}
+pd.read_csv("./data/co2-un-data.csv")
+```
+
+Looking at the table that is outputted above we can see that there appear to be two rows at the top of the file that contain information about the data in the table. 
+The first is a header that tells us the table number and its name. 
+Ideally, we'd skip that. We can do this using the `skiprows` argument in `read_csv` by giving it a number of rows to skip.
+
+```{python}
+pd.read_csv("./data/co2-un-data.csv", skiprows=1)
+```
+
+Another thing we can do is to tell the `read_csv` function what the column names should be with the `names` argument where we give it the column names we want as a Python list.
+If we do this, then we need to skip 2 rows including the original column headings. 
+Let's also save this data frame to `co2_emissions_dirty` so that we don't have to read it every time we want to clean it even more.
+
+```{python}
+co2_emissions_dirty = (
+    pd.read_csv("./data/co2-un-data.csv", skiprows=2,
+                names=['region', 'country', 'year', 'series', 'value', 'footnotes', 'source'])
+)
+```
+
+```{python}
+co2_emissions_dirty
+```
+
+Bonus: Another way to deal with the column names 
+Many data analysts prefer to have their column names be in all lower case. We can apply the `rename` method to set all of the column names to lower case.
+
+```{python}
+(
+    pd.read_csv("./data/co2-un-data.csv", skiprows=1)
+    .rename(columns=str.lower)
+)
+```
+
+We previously saw how we can subset columns from a data frame using the select function. 
+There are a lot of columns with extraneous information in this dataset, let's subset out the columns we are interested in. 
+
+#### Reviewing selecting columns
+Select the country, year, series, and value columns from our dataset. 
+
+```{python}
+(
+    co2_emissions_dirty
+    .filter(['country', 'year', 'series', 'value'])
+)
+```
+
+The series column has two methods of quantifying CO2 emissions - "Emissions (thousand metric tons of carbon dioxide)" and "Emissions per capita (metric tons of carbon dioxide)". 
+Those are long titles that we'd like to shorten to make them easier to work with. 
+We can shorten them to "emissions_total" and "emissions_percap" using the recode function. 
+We can achieve this by applying the pandas `replace` method to replace the values. 
+When using the `replace` method we need to tell it which column we want to replace values with and then what is the old value (e.g. "Emissions (thousand metric tons of carbon dioxide)") and new values (e.g. "emissions_total").
+
+
+```{python}
+(
+    co2_emissions_dirty
+    .filter(['country', 'year', 'series', 'value'])
+    .replace({
+        'series': {
+            "Emissions (thousand metric tons of carbon dioxide)": "emissions_total",
+            "Emissions per capita (metric tons of carbon dioxide)": "emissions_percap",
+            }, 
+            })
+)
+```
+
+Recall that we'd like to have separate columns for the two ways that we CO2 emissions data. 
+To achieve this, we'll apply the `pivot` method that we used previously. 
+The columns we want to spread out are "series" (i.e. the `columns` argument) and "value" (i.e. the `value` argument).
+
+```{python}
+(
+    co2_emissions_dirty
+    .filter(['country', 'year', 'series', 'value'])
+    .replace({
+        'series': {
+            "Emissions (thousand metric tons of carbon dioxide)":"emissions_total",
+            "Emissions per capita (metric tons of carbon dioxide)":"emissions_percap",
+            }, 
+            })
+    .pivot(index=['country', 'year'], columns='series', values='value')
+    .reset_index()
+)
+```
+Excellent! The last step before we can join this data frame is to get the most data that is for the year closest to 2007 so we can make a more direct comparison to the most recent data we have from gapminder. 
+For the sake of time, we'll just tell you that we want data from 2005. 
+
+#### Bonus: How did we determine that 2005 is the closest year to 2007? 
+> We want to make sure we pick a year that is close to 2005, but also a year that has a decent amount of data to work with. One useful tool is the `value_counts()` method, which will tell us how many times a value is repeated in a column of a data frame. Let's use this function on the year column to see which years we have data for and to tell us whether we have a good number of countries represented in that year.
+
+
+```{python}
+(
+    co2_emissions_dirty
+    .filter(['country', 'year', 'series', 'value'])
+    .replace({
+        'series': {
+            "Emissions (thousand metric tons of carbon dioxide)": "emissions_total",
+            "Emissions per capita (metric tons of carbon dioxide)": "emissions_percap",
+            },
+            })
+   .pivot(index=['country', 'year'], columns='series', values='value')
+   .reset_index()
+   .value_counts(['year'])
+   .sort_index()
+)
+```
+
+It looks like we have data for 140 countries in 2005 and 2010. We chose 2005 because it is closer to 2007.
+
+#### Filtering rows and removing columns
+Filter out data from 2005 and then drop the year column. (Since we will have only data from one year, it is now irrelevant.)
+
+```{python}
+(
+    co2_emissions_dirty
+    .filter(['country', 'year', 'series', 'value'])
+    .replace({
+        'series': {
+            "Emissions (thousand metric tons of carbon dioxide)": "emissions_total","Emissions per capita (metric tons of carbon dioxide)": "emissions_percap",
+            }, 
+            })
+    .pivot(index=['country', 'year'], columns='series', values='value')
+    .reset_index()
+    .query("year == 2005")
+    .drop(columns='year')
+)
+```
+Finally, let's go ahead and assign the output of this code chunk, which is the cleaned data frame, to a variable name:
+
+```{python}
+co2_emissions = (
+    co2_emissions_dirty
+    .filter(['country', 'year', 'series', 'value'])
+    .replace({
+        'series': {
+            'Emissions (thousand metric tons of carbon dioxide)': 'emissions_total',
+            'Emissions per capita (metric tons of carbon dioxide)': 'emissions_percap',
+            }, 
+            })
+    .pivot(index=['country', 'year'], columns='series', values='value')
+    .reset_index()
+    .query("year == 2005")
+    .drop(columns='year')
+)
+```
+
+### Joining data frames
+
+Now we're ready to join our CO2 emissions data to the gapminder data. 
+Previously we saw that we could read in and query the gapminder data like this to get the data from the Americas for 2007 so we can create a new data frame with our filtered data:
+
+~~~
+gapminder_2007 = (
+    gapminder
+    .query("year == 2007 and continent == 'Americas'")
+    .drop(columns=['year', 'continent'])
+)
+~~~
+{: .language-python}
+
+
+Look at the data in `co2_emissions` and `gapminder_data_2007`. 
+If you had to merge these two data frames together, which column would you use to merge them together? 
+If you said "country" - good job!
+
+We'll call country our "key". 
+Now, when we join them together, can you think of any problems we might run into when we merge things? 
+We might not have CO2 emissions data for all of the countries in the gapminder dataset and vice versa. 
+Also, a country might be represented in both data frames but not by the same name in both places. 
+As an example, write down the name of the country that the University of Michigan is in - 
+we'll come back to your answer shortly!
+
+pandas has a number of tools for joining data frames together depending on what we want to do with the rows of the data of countries that are not represented in both data frames. 
+Here we'll be using "inner join" and "outer join". 
+
+In an "inner join", the new data frame only has those rows where the same key is found in both data frames. 
+This is a very commonly used join.
+
+#### Bonus: Other pandas join methods 
+
+There are other types of join too. 
+- For a *left* join, if the key is present in the left hand data frame, it will appear in the output, even if it is not found in the the right hand data frame. 
+- For a *right* join, the opposite is true.
+- For a *outer* (or full) join, all possible keys are included in the output data frame.
+
+Let's give the `merge` method a try.
+
+```{python}
+(
+    gapminder_2007
+    .merge(co2_emissions, how='inner', on='country')
+)
+```
+
+Do you see that we now have data from both data frames joined together? 
+
+One thing to notice is that gapminder data had 25 rows, but the output of our join only had 21. 
+Let's investigate. 
+It appears that there must have been countries in the gapminder data that did not appear in our CO2 emission data. 
+
+Let's do another merge for this, this time with an outer join. 
+If we set the `indicator` argument to `True`, it will add a new column called `_merge` to the merged data, and the value indicates whether a particular record appeared at `left_only`, `right_only`, or `both`. 
+Then we can do a query to show the data for the keys on the left that are missing from the data frame on the right. 
+
+```{python}
+(
+    gapminder_2007
+    .merge(co2_emissions, how='outer', on='country', indicator=True)
+    .query("_merge == 'left_only'")
+)
+```
+
+We can see that the CO2 emission data were missing for Bolivia, Puerto Rico, United States, and Venezuela. 
+
+We can query the CO2 emission data to check if there are records containing these names. 
+
+Note we can split a long string by adding a backslash `\` (it's called a line continuation character) at the end of each line.
+The string will continue on the next line as if it were a single line.
+
+```{python}
+(
+    co2_emissions
+    .query("country.str.contains('Bolivia') or \
+            country.str.contains('Puerto Rico') or \
+            country.str.contains('United States') or \
+            country.str.contains('Venezuela')")
+)
+```
+
+From the outputs above we can see that Bolivia, the United States, and Venezuela are called different things in the CO2 emission data. 
+Puerto Rico isn't a country; it's part of the United States. 
+We can apply the `replace` method to these country names in the CO2 emission data so that the country names for Bolivia, United States, and Venezuela, match those in the gapminder data.
+
+```{python}
+(
+    co2_emissions
+    .replace({'country':{'Bolivia (Plurin. State of)':'Bolivia',
+                         'United States of America':'United States',
+                         'Venezuela (Boliv. Rep. of)':'Venezuela'}
+             })
+)
+```
+
+```{python}
+(
+    gapminder_2007
+    .merge(co2_emissions.replace({'country':{'Bolivia (Plurin. State of)':'Bolivia',
+                                  'United States of America':'United States',
+                                  'Venezuela (Boliv. Rep. of)':'Venezuela'}
+                                 }),
+           how='outer', on='country', indicator=True)
+    .query("_merge == 'left_only'")
+)
+```
+
+Now we see that the replacement of the country names enabled the join for all countries in the gapminder, and we are left with Puerto Rico. 
+In the next exercise, let's replace the name Puerto Rico to the United States in the gapminder data and then use the `groupby` method to aggregate the data.
+We'll use the population data to weight the life expectancy and GDP values.
+
+In the gapminder data, let's first replace the name Puerto Rico to the United States. 
+
+```{python}
+(
+    gapminder_2007
+    .replace({'country': {'Puerto Rico':'United States'}})
+)
+```
+
+Now we have to group Puerto Rico and the US together, aggregating and calculating the data for all of the other columns. 
+This is a little tricky - we will need a populated-weighted mean of lifeExp and gdpPercap. 
+
+```{python}
+(
+    gapminder_2007
+    .replace({'country': {'Puerto Rico': 'United States'}})
+    .groupby('country')
+    .apply(lambda df: pd.Series({
+        'pop': np.sum(df['pop']),
+        'gdpPercap': np.sum(df['gdpPercap'] * df['pop']) / np.sum(df['pop']),
+        'lifeExp': np.sum(df['lifeExp'] * df['pop']) / np.sum(df['pop']),
+        }))
+)
+```
+
+Let's check to see if it worked! 
+
+```{python}
+(
+    gapminder_2007
+    .replace({'country':{'Puerto Rico': 'United States'}})
+    .groupby('country')
+    .apply(lambda df: pd.Series({
+        'pop': np.sum(df['pop']),
+        'gdpPercap': np.sum(df['gdpPercap'] * df['pop']) / np.sum(df['pop']),
+        'lifeExp': np.sum(df['lifeExp'] * df['pop']) / np.sum(df['pop']),
+        }))
+    .merge(co2_emissions.replace({
+        'country': {
+            "Bolivia (Plurin. State of)": "Bolivia",
+            "United States of America":"United States",
+            "Venezuela (Boliv. Rep. of)":"Venezuela",
+            }}),
+           how='outer', on='country', indicator=True)
+    .query("_merge == 'left_only'")
+)
+```
+
+Now the output above returns an empty data frame, which tells us that we have reconciled all of the keys from the gapminder data with the data in the CO2 emission data.
+
+Finally, let's merge the data with inner join to create a new data frame.
+
+```{python}
+gapminder_co2 = (
+    gapminder_2007
+    .replace({'country':{'Puerto Rico': 'United States'}})
+    .groupby('country')
+    .apply(lambda df: pd.Series({
+        'pop': np.sum(df['pop']),
+        'gdpPercap': np.sum(df['gdpPercap'] * df['pop']) / np.sum(df['pop']),
+        'lifeExp': np.sum(df['lifeExp'] * df['pop']) / np.sum(df['pop']),
+        }))
+    .merge(co2_emissions.replace({
+        'country': {
+            "Bolivia (Plurin. State of)":"Bolivia",
+            "United States of America":"United States",
+            "Venezuela (Boliv. Rep. of)":"Venezuela",
+            }}),
+           how='inner', on='country')
+)
+```
+
+One last thing! What if we're interested in distinguishing between countries in North America and South America? We want to create two groups - Canada, the United States, and Mexico in one and the other countries in another.  
+
+We can apply the `assign` method to add a new column and use the numpy function `np.where` to help us define the region.
+
+```{python}
+(
+    gapminder_co2
+    .assign(region=lambda df: np.where(df['country'].isin(['Canada', 'United States', 'Mexico']), 'north', 'south'))
+)
+```
+
+Another way to achieve this is as follows.
+
+```{python}
+(
+    gapminder_co2
+    .assign(region=lambda df: df.apply(
+        lambda x: 'north' if x['country'] in ['Canada', 'United States', 'Mexico'] else 'south', 
+        axis='columns'))
+)
+```
+
+Let's look at the output - see how the Canada, US, and Mexico rows are all labeled as "north" and everything else is labeled as "south". 
+
+We have reached our data cleaning goals! 
+One of the best aspects of doing all of these steps coded in Python is that our efforts are reproducible, and the raw data is maintained. 
+With good documentation of data cleaning and analysis steps, we could easily share our work with another researcher who would be able to repeat what we've done. 
+However, it's also nice to have a saved `csv` copy of our clean data. 
+That way we can access it later without needing to redo our data cleaning, 
+and we can also share the cleaned data with collaborators. 
+We can apply the `to_csv` method to a data frame to save it to a CSV file. 
+
+
+```{python}
+(
+    gapminder_co2
+    .assign(region=lambda df: np.where(df['country'].isin(['Canada', 'United States', 'Mexico']), 'north', 'south'))
+    .to_csv("./data/gapminder_co2.csv")
+)
+```
+
+Great - Now we can move on to the analysis! 
+
+## Analyzing combined data
+
+
+For our analysis, we have two questions we'd like to answer. 
+First, is there a relationship between the GDP of a country and the amount of CO2 emitted (per capita)?
+Second, Canada, the United States, and Mexico account for nearly half of the population of the Americas. 
+What percent of the total CO2 production do they account for?
+
+To answer the first question, we'll plot the CO2 emitted (on a per capita basis) against the GDP (on a per capita basis) using a scatter plot:
+
+```{python}
+import altair as alt
+
+chart = (
+    alt.Chart(gapminder_co2).mark_point().encode(
+        x=alt.X('gdpPercap:Q').title("GDP (per capita)"),
+        y=alt.Y('emissions_percap:Q').title("CO2 emitted (per capita)")
+    ).properties(
+        title=["There is a strong association between a nation's GDP", "and the amount of CO2 it produces"]
+    )
+)
+
+chart
+```
+
+*Tip:* Notice we used a list in our title to have multiple lines.
+
+To help clarify the association, we can add a fitted line representing a linear regression model.
+
+```{python}
+
+chart + chart.transform_regression('gdpPercap', 'emissions_percap').mark_line(color='red')
+```
+
+We can also use other regression models. For example, let's try a third order polynomial regression model.
+
+```{python}
+
+chart + chart.transform_regression('gdpPercap', 'emissions_percap', method='poly', order=3).mark_line(color='red')
+```
+
+In addition, we see that only two or three countries have very high GDP/emissions, while the rest of the countries are cluttered in the lower ranges of the axes. 
+To make it easier to see the relationship we can set the x and y axis to a logarithmic scale.
+Lastly, we can also add a text layer that displays the country names next to the markers. 
+
+```{python}
+
+base = (
+    alt.Chart(gapminder_co2).encode(
+        x=alt.X('gdpPercap:Q').title("GDP (per capita)").scale(type='log'),
+        y=alt.Y('emissions_percap:Q').title("CO2 emitted (per capita)").scale(type='log'),
+    ).properties(
+        title=["There is a strong association between a nation's GDP", "and the amount of CO2 it produces"]
+    )
+)
+
+points = base.mark_point()
+
+texts = base.mark_text().encode(
+    text="country:N",
+)
+
+points + texts
+```
+
+
+To answer our first question, as the title of our plot indicates there is indeed a strong association between a nation's GDP and the amount of CO2 it produces.
+
+For the second question, we want to create two groups - Canada, the United States, and Mexico in one and the other countries in another.
+
+```{python}
+(
+    gapminder_co2
+    .assign(region=lambda df: np.where(df['country'].isin(['Canada', 'United States', 'Mexico']), 'north', 'south'))
+)
+```
+
+Now we can use this column to repeat our `groupby` method.
+
+```{python}
+(
+    gapminder_co2
+    .assign(region=lambda df: np.where(df['country'].isin(['Canada', 'United States', 'Mexico']), 'north', 'south'))
+    .groupby('region')[["emissions_total", "pop"]]
+    .sum()
+)
+```
+
+We see that although Canada, the United States, and Mexico account for close to half the population of the Americas, they account for 88% of the CO2 emitted. We just did this math quickly by plugging the numbers from our table into the console to get the percentages. Can we make that a little more reproducible by calculating percentages for population and total emissions into our data before summarizing?
 
 
 ### Bonus: interactive map plot
 
-```{python}
-import pandas as pd
-gapminder_1997 = pd.read_csv("./data/gapminder_1997.csv")
+Altair also has useful functions to draw your data on a map. 
+There are lots of different ways to draw maps but here's a quick example of making a [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) using the gapminder data. 
+Here we will plot each country with a color indicating the life expectancy in 1997.
 
-test = (
+```{python}
+
+df = (
     pd.read_csv("./data/gapminder_1997.csv")
-    .replace({'country' : {'United States' : 'United States of America',
-                           'United Kingdom' : 'United Kingdom of Great Britain and Northern Ireland',
-                          }})
+    .replace({'country' : {
+        'United States' : 'United States of America',
+        'United Kingdom' : 'United Kingdom of Great Britain and Northern Ireland',
+        }})
     .merge(pd.read_csv("./data/country-iso.csv")
            .rename(columns={'name' : 'country'}),
            on='country', how='inner')
@@ -31,7 +1130,6 @@ test = (
 ```
 
 ```{python}
-import altair as alt
 from altair.datasets import data
 
 countries = alt.topo_feature(data.world_110m.url, 'countries')
@@ -50,9 +1148,12 @@ base.encode(
 ).transform_lookup(
     lookup='id',
     from_=alt.LookupData(
-        test,
+        df,
         key='country-code',
         fields=['lifeExp', 'country'],
     )
+).properties(
+    width=600, 
+    height=300,
 )
 ```
